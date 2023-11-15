@@ -72,6 +72,8 @@ class Experience:
             - tous vu_deux_fois -> Return True
             - au moins un 'vu' ou 'non_vu' -> Return False        
         """
+        if self.pool_vus == []:
+            return False
         for stimulus in self.pool_vus:
             if stimulus.statut in ["vu", "non vu"]:
                 # donc pas "vu deux fois"
@@ -83,5 +85,5 @@ class Experience:
         Tant qu'il existe un stimulus à 'vu' ou 'non_vu',
         on enclenche un prochain tour.
         """
-        while not self.vrai_si_tous_vu_deux_fois():
+        while self.vrai_si_tous_vu_deux_fois() is False:
             self.deroulement_un_tour()
