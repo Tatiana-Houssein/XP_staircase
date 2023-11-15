@@ -47,10 +47,12 @@ class Experience:
     
     def prochain_stimulus(self)->Stimulus:
         for stimulus in self.pool_vus:
-            if stimulus.statut == "vu" and stimulus.lag == 0:
+            if stimulus.lag == 0:
                 return stimulus
-            elif stimulus.statut == "non vu":
-                return stimulus
+        stimulus = self.pool_non_vus[0]
+        self.pool_vus.append(stimulus)
+        self.pool_non_vus.pop(0)
+        return stimulus
             
     def deroulement_un_tour(self)-> None:
         """
