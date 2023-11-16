@@ -23,12 +23,19 @@ class Experience:
         self.pool_vus : list[Stimulus] = []  ###########  
         self.lag_global = lag_initial
 
-    def attribution_des_lag(self, stimulus: Stimulus) -> None:
+    def attribution_du_lag(self, stimulus: Stimulus) -> None:
         """
         Attribution des lag quand il est non-vu on lui attribue un lag correspondant au lag général de l'expe
         """
         if stimulus.statut == "non vu":
             stimulus.lag = self.lag_global
+
+    def mise_a_jour_lag_pool_vu(self) -> None: 
+        '''
+        On abaisse de 1 le lag de tous les stimuli présents dans pool_vus
+        '''
+        for stimulus in self.pool_vus:
+            stimulus.lag -= 1
 
     def le_sujet_repond(self)->str:
         return(input("Avez vous déjà vu ce visage ?"))        
@@ -64,9 +71,10 @@ class Experience:
         Suivant la réponse (bonne ou mauvaise) on ajuste le lag global.
         """
         stimulus_choisi = self.prochain_stimulus()
-        self.attribution_des_lag(stimulus_choisi) #######
+        self.attribution_du_lag(stimulus_choisi) #######
         print(stimulus_choisi.numero)
         print(stimulus_choisi.statut)
+        self.mise_a_jour_lag_pool_vu()
         self.question_au_sujet_maj_lag_global_et_status_stimulus(stimulus_choisi)
     
     def deroulement_expe(self) -> None:
