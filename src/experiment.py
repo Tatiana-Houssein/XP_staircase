@@ -80,8 +80,12 @@ class Experience:
     
     def deroulement_expe(self) -> None:
         """
-        Tant qu'il existe un stimulus à 'vu' ou 'non_vu',
-        on enclenche un prochain tour.
+        D'abord, suppression des stimuli vu deux du pool_vue
+        Puis, on enclenche self.deroulement_un_tout tant que les deux listes pool_vus et pool_non_vus ne sont pas vides
+        Avant, on supprime de la liste tous les stimuli vu deux fois du pool_vus 
         """
-        while not self.vrai_si_tous_vu_deux_fois():
+        for stimulus in self.pool_vus:
+            if stimulus.statut == "vu deux fois":
+                self.pool_vus.remove(stimulus)
+        while len(self.pool_vus) > 0 or len(self.pool_non_vus) > 0 :
             self.deroulement_un_tour()
