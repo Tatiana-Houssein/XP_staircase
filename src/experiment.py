@@ -65,20 +65,6 @@ class Experience:
         print(stimulus_choisi.numero)
         print(stimulus_choisi.statut)
         self.question_au_sujet_maj_lag_global_et_status_stimulus(stimulus_choisi)
-
-    def vrai_si_tous_vu_deux_fois(self)-> bool:
-        """
-        Vérife si tous les stimuli du pool_vu sont:
-            - tous vu_deux_fois -> Return True
-            - au moins un 'vu' ou 'non_vu' -> Return False        
-        """
-        if self.pool_vus == []:
-            return False
-        for stimulus in self.pool_vus:
-            if stimulus.statut in ["vu", "non vu"]:
-                # donc pas "vu deux fois"
-                return False
-        return True
     
     def deroulement_expe(self) -> None:
         """
