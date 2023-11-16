@@ -74,7 +74,7 @@ class Experience:
         self.attribution_du_lag(stimulus_choisi) #######
         print(stimulus_choisi.numero)
         print(stimulus_choisi.statut)
-        self.mise_a_jour_lag_pool_vu()
+        self.mise_a_jour_lag_pool_vu()#####
         self.question_au_sujet_maj_lag_global_et_status_stimulus(stimulus_choisi)
     
     def deroulement_expe(self) -> None:
