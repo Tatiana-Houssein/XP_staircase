@@ -72,6 +72,8 @@ class Experience:
             - tous vu_deux_fois -> Return True
             - au moins un 'vu' ou 'non_vu' -> Return False        
         """
+        if self.pool_vus == []:
+            return False
         for stimulus in self.pool_vus:
             if stimulus.statut in ["vu", "non vu"]:
                 # donc pas "vu deux fois"
