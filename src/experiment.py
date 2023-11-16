@@ -60,7 +60,7 @@ class Experience:
                 return stimulus
         stimulus = self.pool_non_vus[0]
         self.pool_vus.append(stimulus)
-        del self.pool_non_vus.pop[0]  ########Bug ici
+        self.pool_non_vus.pop[0]  ########Bug ici
         return stimulus
             
     def deroulement_un_tour(self)-> None:
