@@ -51,7 +51,7 @@ class Experience:
                 return stimulus
         stimulus = self.pool_non_vus[0]
         self.pool_vus.append(stimulus)
-        self.pool_non_vus.pop(0)
+        del self.pool_non_vus.pop(0)
         return stimulus
             
     def deroulement_un_tour(self)-> None:
