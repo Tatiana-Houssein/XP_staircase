@@ -1,3 +1,15 @@
+from src.resultat import Resultat
+
+res = Resultat(
+    1,
+    1,
+    1,
+    "a",
+    "e"
+)
+
+
+
 class Stimulus:
     def __init__(self, numero: str) -> None:
         self.numero = numero
