@@ -50,10 +50,9 @@ class Experience:
         reponse_du_sujet:str = self.le_sujet_repond()
         if reponse_du_sujet == stimulus.correct_response():
             self.lag_global += 1
-            print(reponse_du_sujet, stimulus.correct_response())
         else : 
             self.lag_global -= 1
-            print(reponse_du_sujet, stimulus.correct_response())
+        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response()}")
         stimulus.mise_a_jour_status()
     
     def prochain_stimulus(self)->Stimulus:
@@ -62,7 +61,7 @@ class Experience:
                 return stimulus
         stimulus = self.pool_non_vus[0]
         self.pool_vus.append(stimulus)
-        self.pool_non_vus.pop[0]
+        self.pool_non_vus.pop(0)
         return stimulus
             
     def deroulement_un_tour(self)-> None:
@@ -74,8 +73,7 @@ class Experience:
         """
         stimulus_choisi = self.prochain_stimulus()
         self.attribution_du_lag(stimulus_choisi) #######
-        print(stimulus_choisi.numero)
-        print(stimulus_choisi.statut)
+        print(f"Stimulus {stimulus_choisi.numero}, status : {stimulus_choisi.statut}")
         self.mise_a_jour_lag_pool_vu()#####
         self.question_au_sujet_maj_lag_global_et_status_stimulus(stimulus_choisi)
     
