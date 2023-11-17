@@ -1,14 +1,19 @@
 from src.experiment import Experience, Stimulus
 from src.resultat import Resultat
 import random as rd
+import numpy as np
+
+
+def probabilite_de_reussite(x, lag_limit):
+    return (np.arctan(lag_limit - x) + np.pi / 2) / np.pi
 
 
 class ExperienceTest(Experience):
     def __init__(
-        self, liste_stimuli: list[Stimulus], lag_initial: int, performance_ia: float
+        self, liste_stimuli: list[Stimulus], lag_initial: int, lag_limit: int
     ) -> None:
         super().__init__(liste_stimuli, lag_initial)
-        self.perforance_ia = performance_ia
+        self.lag_limit = lag_limit
 
     def question_au_sujet_maj_lag_global_et_status_stimulus(
         self, stimulus: Stimulus
@@ -16,9 +21,10 @@ class ExperienceTest(Experience):
         """
         L'IA répond correctement à chaque fois.
         """
+        proba_reussite = probabilite_de_reussite(stimulus.lag_initial, self.lag_limit)
         u = rd.random()
         print(f"lag global: {self.lag_global}")
-        if u < self.perforance_ia:  # l'IA répond correctement
+        if u < proba_reussite:  # l'IA répond correctement
             reponse_du_sujet: str = stimulus.correct_response()
         else:
             if stimulus.correct_response() == "Y":
@@ -46,5 +52,5 @@ if __name__ == "__main__":
     liste_stimuli = []
     for i in range(1000):
         liste_stimuli.append(Stimulus(str(i)))
-    experience_test = ExperienceTest(liste_stimuli, 10, 0.51)
+    experience_test = ExperienceTest(liste_stimuli, 10, 15)
     experience_test.deroulement_expe()

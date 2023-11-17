@@ -1,4 +1,5 @@
 from src.resultat import Resultat
+from src.io import get_next_number_for_wrtitning_csv
 import pandas as pd
 
 
@@ -8,6 +9,7 @@ class Stimulus:
         self.statut: str = "non vu"
         self.correct_responses = self.correct_response()
         self.lag = 0
+        self.lag_initial: 0
 
     def correct_response(self) -> str:
         if self.statut == "non vu":
@@ -79,6 +81,8 @@ class Experience:
             if stimulus.lag == 0:
                 return stimulus
         stimulus = self.pool_non_vus[0]
+        stimulus.lag = self.lag_global
+        stimulus.lag_initial = self.lag_global
         self.pool_vus.append(stimulus)
         self.pool_non_vus.pop(0)
         return stimulus
@@ -120,4 +124,6 @@ class Experience:
                 "reponse_sujet",
             ],
         )
-        df_result.to_csv("data/results.csv", index=False)
+        next_csv_number = get_next_number_for_wrtitning_csv() + 1
+        csv_path = f"data/results_{next_csv_number}.csv"
+        df_result.to_csv(csv_path, index=False)
