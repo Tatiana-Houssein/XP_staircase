@@ -1,0 +1,49 @@
+name: xp-staircase
+channels:
+  - defaults
+dependencies:
+  - bzip2=1.0.8=he774522_0
+  - ca-certificates=2023.08.22=haa95532_0
+  - libffi=3.4.4=hd77b12b_0
+  - openssl=3.0.12=h2bbff1b_0
+  - pip=23.3=py311haa95532_0
+  - python=3.11.5=he1021f5_0
+  - setuptools=68.0.0=py311haa95532_0
+  - sqlite=3.41.2=h2bbff1b_0
+  - tk=8.6.12=h2bbff1b_0
+  - vc=14.2=h21ff451_1
+  - vs2015_runtime=14.27.29016=h5e58377_2
+  - wheel=0.41.2=py311haa95532_0
+  - xz=5.4.2=h8cc25b3_0
+  - zlib=1.2.13=h8cc25b3_0
+  - pip:
+      - cfgv==3.4.0
+      - contourpy==1.2.0
+      - cycler==0.12.1
+      - distlib==0.3.7
+      - filelock==3.13.1
+      - fonttools==4.44.3
+      - identify==2.5.31
+      - kiwisolver==1.4.5
+      - matplotlib==3.8.2
+      - mypy==1.7.0
+      - mypy-extensions==1.0.0
+      - nodeenv==1.8.0
+      - numpy==1.26.2
+      - packaging==23.2
+      - pandas==2.1.3
+      - pandas-stubs==2.1.1.230928
+      - pillow==10.1.0
+      - platformdirs==3.11.0
+      - pre-commit==3.5.0
+      - pyparsing==3.1.1
+      - python-dateutil==2.8.2
+      - pytz==2023.3.post1
+      - pyyaml==6.0.1
+      - ruff==0.1.6
+      - six==1.16.0
+      - types-pytz==2023.3.1.1
+      - typing-extensions==4.8.0
+      - tzdata==2023.3
+      - virtualenv==20.24.6
+prefix: C:\Users\gauthier.delvoye\AppData\Local\miniconda3\envs\xp-staircase
