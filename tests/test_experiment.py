@@ -49,8 +49,8 @@ class ExperienceTest(Experience):
 
 
 if __name__ == "__main__":
-    liste_stimuli = []
+    liste_stimuli: list[Stimulus] = []
     for i in range(1000):
-        liste_stimuli.append(Stimulus(str(i)))
+        liste_stimuli.append(Stimulus(i))
     experience_test = ExperienceTest(liste_stimuli, 10, 15)
     experience_test.deroulement_expe()

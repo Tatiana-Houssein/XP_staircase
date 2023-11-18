@@ -8,8 +8,8 @@ class Stimulus:
         self.numero = numero
         self.statut: str = "non vu"
         self.correct_responses = self.correct_response()
-        self.lag = 0
-        self.lag_initial: 0
+        self.lag: int = 0
+        self.lag_initial: int = 0
 
     def correct_response(self) -> str:
         if self.statut == "non vu":
