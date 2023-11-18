@@ -2,7 +2,7 @@ import os
 
 
 def get_next_number_for_wrtitning_csv() -> int:
-    csv: list[str] = [csv for csv in os.listdir("data")]
+    csv: list[str] = list(os.listdir("data"))
     if csv == []:
         return 0
     last_element = csv[-1].split(".")[0]

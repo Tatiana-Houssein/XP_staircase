@@ -1,10 +1,12 @@
-from src.experiment import Experience, Stimulus
-from src.resultat import Resultat
 import random as rd
+
 import numpy as np
 
+from src.experiment import Experience, Stimulus
+from src.resultat import Resultat
 
-def probabilite_de_reussite(x, lag_limit):
+
+def probabilite_de_reussite(x: float, lag_limit: int) -> float:
     return (np.arctan(lag_limit - x) + np.pi / 2) / np.pi
 
 
@@ -22,25 +24,22 @@ class ExperienceTest(Experience):
         L'IA répond correctement à chaque fois.
         """
         proba_reussite = probabilite_de_reussite(stimulus.lag_initial, self.lag_limit)
-        u = rd.random()
+        u = rd.random()  # noqa: S311
         print(f"lag global: {self.lag_global}")
         if u < proba_reussite:  # l'IA répond correctement
-            reponse_du_sujet: str = stimulus.correct_response()
+            reponse_du_sujet = stimulus.correct_response
         else:
-            if stimulus.correct_response() == "Y":
-                reponse_du_sujet = "N"
-            else:
-                reponse_du_sujet = "Y"
-        if reponse_du_sujet == stimulus.correct_response():
+            reponse_du_sujet = stimulus.uncorrect_response
+        if reponse_du_sujet == stimulus.correct_response:
             self.lag_global += 1
         else:
             self.lag_global -= 1
-        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response()}")
+        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
             numero_stimulus=stimulus.numero,
-            reponse_correct=stimulus.correct_response(),
+            reponse_correct=stimulus.correct_response,
             reponse_sujet=reponse_du_sujet,
         )
         self.liste_resultat.append(resultat)
@@ -49,8 +48,6 @@ class ExperienceTest(Experience):
 
 
 if __name__ == "__main__":
-    liste_stimuli: list[Stimulus] = []
-    for i in range(1000):
-        liste_stimuli.append(Stimulus(i))
+    liste_stimuli: list[Stimulus] = [Stimulus(i) for i in range(1000)]
     experience_test = ExperienceTest(liste_stimuli, 10, 15)
     experience_test.deroulement_expe()

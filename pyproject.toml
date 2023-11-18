@@ -1,0 +1,70 @@
+[tool.ruff]
+target-version = "py310"
+
+line-length = 88  # Same as Black
+
+fix = true
+fixable = ["ALL"] # Allow autofix for all enabled rules
+unfixable = []
+
+# Rule selection
+select = [
+ "F", "E", "C90", "I", "N", "UP", "YTT", "ANN", "ASYNC", "S", "BLE",
+ "FBT", "B", "A", "C4", "DTZ", "T10", "DJ", "EXE", "FA", "ISC",
+ "ICN", "G", "INP", "PIE", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SLOT", "SIM",
+ "TID", "TCH", "INT", "ARG", "PTH", "TD", "FIX", "ERA", "PD", "PGH", "PL", "TRY",
+ "FLY", "NPY", "AIR", "PERF", "RUF", "T20"
+]
+# Not selected:
+# - CPY (flake8-copyright) no need of a copyright per file
+# - COM (flake8-commas) handled by black
+# - EM  (flake8-errmsg) too little gain for the cost
+
+ignore = [
+    "D",  # docstrings
+    "D203",  # 1 blank line required before class docstring
+    "D212",  # Multi-line docstring summary should start at the first line
+    "PTH123", # builtin open() should be replaced by Path.open()
+    "TRY003", # Avoid specifying long messages outside the exception class
+    "ANN101", # Missing type annotation for self in method
+    "ANN102", # Missing type annotation for cls in classmethod
+    "G004",   # ogging statement uses f-string
+    "T201",  # `print` found
+]
+
+exclude = [
+    ".ipynb",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytype",
+    ".ruff_cache",
+    "__pypackages__",
+    ".venv",
+    "venv",
+]
+
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["D104"] # Ignore "missing docstring in public package" in all `__init__.py` files
+"test/**/*.py" = [  # Ignore rules necessary for tests
+    "INP001", # Ignore "File is part of an implicit namespace package. Add an `__init__.py`."
+    "S101", # Ignore "Use of `assert` detected" because pytest relies on assert
+    "N802", # Ignore "Function name should be lowercase" because test function are non-standard
+#     "ARG", # Unused function args -> fixtures nevertheless are functionally relevant...
+#     "FBT", # Don't care about booleans as positional arguments in tests, e.g. via @pytest.mark.parametrize()
+    "PLR2004", # Ignore "Magic value used in comparison"
+#     "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+"test/robot/keywords/**/*.py" = [  # Ignore rules broken by Robot Framework
+    "N999"  # Ignore "Invalid module name" (because of CamelCase modules)
+]
+
+[tool.ruff.flake8-annotations]
+mypy-init-return = true
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
+
+#[tool.ruff.mccabe]
+#max-complexity = 15

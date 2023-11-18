@@ -1,22 +1,27 @@
-from src.resultat import Resultat
-from src.io import get_next_number_for_wrtitning_csv
 import pandas as pd
+
+from src.io import get_next_number_for_wrtitning_csv
+from src.resultat import Resultat
 
 
 class Stimulus:
     def __init__(self, numero: int) -> None:
         self.numero = numero
         self.statut: str = "non vu"
-        self.correct_responses = self.correct_response()
         self.lag: int = 0
         self.lag_initial: int = 0
 
+    @property
     def correct_response(self) -> str:
         if self.statut == "non vu":
-            self.correct_responses = "N"
-        else:
-            self.correct_responses = "Y"
-        return self.correct_responses
+            return "N"
+        return "Y"
+
+    @property
+    def uncorrect_response(self) -> str:
+        if self.statut == "non vu":
+            return "Y"
+        return "N"
 
     def mise_a_jour_status(self) -> None:
         if self.statut == "non vu":
@@ -35,7 +40,8 @@ class Experience:
 
     def attribution_du_lag(self, stimulus: Stimulus) -> None:
         """
-        Attribution des lag quand il est non-vu on lui attribue un lag correspondant au lag général de l'expe
+        Attribution des lag quand il est non-vu on lui attribue un lag correspondant au
+        lag général de l'expe.
         """
         if stimulus.statut == "non vu":
             stimulus.lag = self.lag_global
@@ -56,20 +62,21 @@ class Experience:
         self, stimulus: Stimulus
     ) -> None:
         """
-        Le lag global est adapté à la bonne ou mauvaise réponse du sujet au stimulus donné,
+        Le lag global est adapté à la bonne ou mauvaise réponse du sujet au stimulus
+        donné.
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
         reponse_du_sujet: str = self.le_sujet_repond()
-        if reponse_du_sujet == stimulus.correct_response():
+        if reponse_du_sujet == stimulus.correct_response:
             self.lag_global += 1
         else:
             self.lag_global -= 1
-        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response()}")
+        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
             numero_stimulus=stimulus.numero,
-            reponse_correct=stimulus.correct_response(),
+            reponse_correct=stimulus.correct_response,
             reponse_sujet=reponse_du_sujet,
         )
         self.liste_resultat.append(resultat)
@@ -103,7 +110,8 @@ class Experience:
     def deroulement_expe(self) -> None:
         """
         D'abord, suppression des stimuli vu deux du pool_vue
-        Puis, on enclenche self.deroulement_un_tout tant que les deux listes pool_vus et pool_non_vus ne sont pas vides
+        Puis, on enclenche self.deroulement_un_tout tant que les deux listes pool_vus et
+        pool_non_vus ne sont pas vides.
         Avant, on supprime de la liste tous les stimuli vu deux fois du pool_vus
         """
         while len(self.pool_non_vus) > 0:
