@@ -2,7 +2,7 @@ import random as rd
 
 import numpy as np
 
-from src.experiment import Experience, Stimulus
+from src.experiment import Experience, ReponseSujet, StatusStimulus, Stimulus
 from src.resultat import Resultat
 
 
@@ -25,21 +25,33 @@ class ExperienceTest(Experience):
         """
         proba_reussite = probabilite_de_reussite(stimulus.lag_initial, self.lag_limit)
         u = rd.random()  # noqa: S311
-        print(f"lag global: {self.lag_global}")
+        print(
+            f"Stm {stimulus.numero}, ini: {stimulus.lag_initial}, lag: {stimulus.lag}"
+        )
+        print(len(self.pool_non_vus), len(self.pool_vus))
+        print(f"lag global avant: {self.lag_global}")
+        print(f"Status stimulus: {stimulus.statut}")
         if u < proba_reussite:  # l'IA répond correctement
-            reponse_du_sujet = stimulus.correct_response
-        else:
-            reponse_du_sujet = stimulus.uncorrect_response
-        if reponse_du_sujet == stimulus.correct_response:
+            if stimulus.statut == StatusStimulus.non_vu:
+                reponse_du_sujet = ReponseSujet.non_vu
+            else:
+                reponse_du_sujet = ReponseSujet.vu
+        elif u >= proba_reussite:
+            if stimulus.statut == StatusStimulus.non_vu:
+                reponse_du_sujet = ReponseSujet.vu
+            else:
+                reponse_du_sujet = ReponseSujet.non_vu
+        print(f"Réponse IA: {reponse_du_sujet}")
+        if self.is_sujet_right(reponse_du_sujet, stimulus.statut):
             self.lag_global += 1
         else:
             self.lag_global -= 1
-        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response}")
+        print(f"Lag Global après : {self.lag_global}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
             numero_stimulus=stimulus.numero,
-            reponse_correct=stimulus.correct_response,
+            reponse_correct=stimulus.statut,
             reponse_sujet=reponse_du_sujet,
         )
         self.liste_resultat.append(resultat)
@@ -48,6 +60,6 @@ class ExperienceTest(Experience):
 
 
 if __name__ == "__main__":
-    liste_stimuli: list[Stimulus] = [Stimulus(i) for i in range(1000)]
-    experience_test = ExperienceTest(liste_stimuli, 10, 15)
+    liste_stimuli: list[Stimulus] = [Stimulus(i) for i in range(100)]
+    experience_test = ExperienceTest(liste_stimuli, 2, 15)
     experience_test.deroulement_expe()

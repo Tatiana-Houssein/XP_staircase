@@ -1,33 +1,59 @@
+from enum import StrEnum
+
 import pandas as pd
 
 from src.io import get_next_number_for_wrtitning_csv
 from src.resultat import Resultat
 
 
+def save_result(liste_resultat: list[Resultat]) -> None:
+    # sauvegarde de la liste des résultats
+    df_result = pd.DataFrame(
+        liste_resultat,
+        columns=[
+            "tour",
+            "lag_global",
+            "numero_stimulus",
+            "reponse_correct",
+            "reponse_sujet",
+        ],
+    )
+    print(df_result.head())
+    next_csv_number = get_next_number_for_wrtitning_csv() + 1
+    csv_path = f"data/results_{next_csv_number}.csv"
+    df_result.to_csv(csv_path, index=False)
+
+
+class TypeErreur(StrEnum):
+    detection_correct = "detection correct"  # sujet vu & stimulus vu
+    omission = "omission"  # sujet non vu VS stimulus vu
+    fausse_alarme = "fausse alarme"  # sujet vu VS stimulus non vu
+    rejet_correct = "rejet correct"  # sujet non vu VS stimulus non vu
+
+
+class StatusStimulus(StrEnum):
+    vu = "vu"
+    non_vu = "non vu"
+    vu_deux_fois = "vu deux fois"
+
+
+class ReponseSujet(StrEnum):
+    vu = "vu"
+    non_vu = "non vu"
+
+
 class Stimulus:
     def __init__(self, numero: int) -> None:
         self.numero = numero
-        self.statut: str = "non vu"
+        self.statut: str = StatusStimulus.non_vu
         self.lag: int = 0
         self.lag_initial: int = 0
 
-    @property
-    def correct_response(self) -> str:
-        if self.statut == "non vu":
-            return "N"
-        return "Y"
-
-    @property
-    def uncorrect_response(self) -> str:
-        if self.statut == "non vu":
-            return "Y"
-        return "N"
-
     def mise_a_jour_status(self) -> None:
-        if self.statut == "non vu":
-            self.statut = "vu"
-        elif self.statut == "vu":
-            self.statut = "vu deux fois"
+        if self.statut == StatusStimulus.non_vu:
+            self.statut = StatusStimulus.vu
+        elif self.statut == StatusStimulus.vu:
+            self.statut = StatusStimulus.vu_deux_fois
 
 
 class Experience:
@@ -43,7 +69,7 @@ class Experience:
         Attribution des lag quand il est non-vu on lui attribue un lag correspondant au
         lag général de l'expe.
         """
-        if stimulus.statut == "non vu":
+        if stimulus.statut == StatusStimulus.non_vu:
             stimulus.lag = self.lag_global
 
     def mise_a_jour_lag_pool_vu(self) -> None:
@@ -56,7 +82,37 @@ class Experience:
                 stimulus.lag = 0
 
     def le_sujet_repond(self) -> str:
-        return input("Avez vous déjà vu ce visage ?")
+        reponse_sujet = input("Avez vous déjà vu ce visage ?")
+        if reponse_sujet == "Y":
+            return ReponseSujet.vu
+        return ReponseSujet.non_vu
+
+    def type_erreur_du_sujet(
+        self,
+        reponse_sujet: str,
+        status_stimulus: str,
+    ) -> str:
+        if status_stimulus == StatusStimulus.non_vu:
+            if reponse_sujet == ReponseSujet.non_vu:
+                return TypeErreur.rejet_correct
+            return TypeErreur.fausse_alarme
+        if reponse_sujet == ReponseSujet.non_vu:
+            return TypeErreur.omission
+        return TypeErreur.detection_correct
+
+    def is_sujet_right(
+        self,
+        reponse_sujet: str,
+        status_stimulus: str,
+    ) -> bool:
+        type_erreur = self.type_erreur_du_sujet(reponse_sujet, status_stimulus)
+        print(type_erreur)
+        if type_erreur in [
+            TypeErreur.rejet_correct,
+            TypeErreur.detection_correct,
+        ]:
+            return True
+        return False
 
     def question_au_sujet_maj_lag_global_et_status_stimulus(
         self, stimulus: Stimulus
@@ -67,23 +123,27 @@ class Experience:
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
         reponse_du_sujet: str = self.le_sujet_repond()
-        if reponse_du_sujet == stimulus.correct_response:
+        if self.is_sujet_right(reponse_du_sujet, stimulus.statut):
             self.lag_global += 1
         else:
             self.lag_global -= 1
-        print(f"Sujet: {reponse_du_sujet} VS Correct {stimulus.correct_response}")
+        print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
             numero_stimulus=stimulus.numero,
-            reponse_correct=stimulus.correct_response,
+            reponse_correct=stimulus.statut,
             reponse_sujet=reponse_du_sujet,
         )
         self.liste_resultat.append(resultat)
 
         stimulus.mise_a_jour_status()
+        if stimulus.statut == StatusStimulus.vu_deux_fois:
+            self.pool_vus.remove(stimulus)
 
     def prochain_stimulus(self) -> Stimulus:
+        print("PROCHAIN")
+        print(f"pool vus taile: {len(self.pool_vus)}")
         for stimulus in self.pool_vus:
             if stimulus.lag == 0:
                 return stimulus
@@ -116,22 +176,8 @@ class Experience:
         """
         while len(self.pool_non_vus) > 0:
             for stimulus in self.pool_vus:
-                if stimulus.statut == "vu deux fois":
+                if stimulus.statut == StatusStimulus.vu_deux_fois:
                     self.pool_vus.remove(stimulus)
             self.deroulement_un_tour()
             self.tour += 1
-
-        # sauvegarde de la liste des résultats
-        df_result = pd.DataFrame(
-            self.liste_resultat,
-            columns=[
-                "tour",
-                "lag_global",
-                "numero_stimulus",
-                "reponse_correct",
-                "reponse_sujet",
-            ],
-        )
-        next_csv_number = get_next_number_for_wrtitning_csv() + 1
-        csv_path = f"data/results_{next_csv_number}.csv"
-        df_result.to_csv(csv_path, index=False)
+        save_result(self.liste_resultat)
