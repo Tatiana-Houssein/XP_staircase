@@ -1,6 +1,7 @@
 # XP_staircase
 
 Script d'un protocole staircase en reconnaissance de visages
+Pour lancer le front dans le navigateur, ouvri un git bash à la racine du projet sur VSCode puis taper ```python -m front.streamlite_front```
 
 # Environnement de travail
 Si l'environnement conda n'est pas ou plus à jour, alors il faut taper dans le terminal git bash ```conda env create -f environment.yml```. Ensuite activer l'environnement : ```conda activate xp-staircase```
