@@ -14,7 +14,7 @@ from src.experiment import (
 from src.resultat import Resultat
 
 col1, col2, col3, col4 = st.columns(4)
-LIMIT_BEFORE_DATA_SAVING = 15
+LIMIT_BEFORE_DATA_SAVING = 160
 
 
 def save_result(liste_resultat: list[Resultat]) -> pd.DataFrame:
@@ -72,6 +72,9 @@ def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
         numero_stimulus=current_stimulus.numero,
         reponse_correct=current_stimulus.statut,
         reponse_sujet=reponse_du_sujet,
+        type_erreur_tds=experiment.type_erreur_du_sujet(
+            reponse_du_sujet, current_stimulus.statut
+        ),
     )
     experiment.liste_resultat.append(resultat)
     experiment.mise_a_jour_lag_pool_vu()
