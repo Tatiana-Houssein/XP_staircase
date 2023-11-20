@@ -16,6 +16,7 @@ def save_result(liste_resultat: list[Resultat]) -> None:
             "numero_stimulus",
             "reponse_correct",
             "reponse_sujet",
+            "type_erreur_tds",
         ],
     )
     print(df_result.head())
@@ -134,6 +135,9 @@ class Experience:
             numero_stimulus=stimulus.numero,
             reponse_correct=stimulus.statut,
             reponse_sujet=reponse_du_sujet,
+            type_erreur_tds=self.type_erreur_du_sujet(
+                reponse_du_sujet, stimulus.statut
+            ),
         )
         self.liste_resultat.append(resultat)
 
@@ -181,3 +185,11 @@ class Experience:
             self.deroulement_un_tour()
             self.tour += 1
         save_result(self.liste_resultat)
+
+
+if __name__ == "__main__":
+    l_stimuli = [Stimulus(i) for i in range(10)]
+    Experience(
+        l_stimuli,
+        3,
+    ).deroulement_expe()

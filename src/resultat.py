@@ -8,3 +8,4 @@ class Resultat:
     numero_stimulus: int
     reponse_correct: str
     reponse_sujet: str
+    type_erreur_tds: str
