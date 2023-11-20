@@ -1,10 +1,10 @@
 import csv
 
-import experiment_js
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
+from front.experiment_js import js_script_optimized
 from src.experiment import (
     Experience,
     ReponseSujet,
@@ -95,7 +95,7 @@ def answer_non_vu() -> None:
 
 
 components.html(
-    experiment_js.js_script_optimized,
+    js_script_optimized,
     height=0,
     width=0,
 )
