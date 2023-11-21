@@ -9,6 +9,7 @@ from src.experiment import (
     ReponseSujet,
     StatusStimulus,
     Stimulus,
+    TypeSucces,
     save_result,
 )
 from src.resultat import Resultat
@@ -30,7 +31,7 @@ def display_face(id_face: int) -> None:
 
 
 if "experiment" not in st.session_state:
-    list_id = list(range(1, 127))
+    list_id = list(range(1, 120))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
@@ -52,9 +53,15 @@ def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
     experiment: Experience = st.session_state["experiment"]
     print(f"EEEEEEEEEEEEEEEEEEEE {experiment.tour} EEEEEEEEEEEEEEEEE")
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
-    if experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut):
+    if (
+        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
+        == TypeSucces.succes
+    ):
         experiment.lag_global += 1
-    else:
+    elif (
+        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
+        == TypeSucces.echec
+    ):
         experiment.lag_global -= 1
     resultat = Resultat(
         tour=experiment.tour,

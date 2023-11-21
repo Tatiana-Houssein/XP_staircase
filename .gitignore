@@ -6,6 +6,7 @@ __pycache__/
 
 .ruff_cache/
 
+cat_tokens/
 tokens/
 
 
