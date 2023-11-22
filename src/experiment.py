@@ -43,6 +43,12 @@ class ReponseSujet(StrEnum):
     non_vu = "non vu"
 
 
+class TypeSucces(StrEnum):
+    succes = "succes"
+    echec = "echec"
+    osef = "osef"
+
+
 class Stimulus:
     def __init__(self, numero: int) -> None:
         self.numero = numero
@@ -105,15 +111,16 @@ class Experience:
         self,
         reponse_sujet: str,
         status_stimulus: str,
-    ) -> bool:
+    ) -> TypeSucces:
         type_erreur = self.type_erreur_du_sujet(reponse_sujet, status_stimulus)
         print(type_erreur)
         if type_erreur in [
-            TypeErreur.rejet_correct,
             TypeErreur.detection_correct,
         ]:
-            return True
-        return False
+            return TypeSucces.succes
+        if type_erreur == TypeErreur.rejet_correct:
+            return TypeSucces.osef
+        return TypeSucces.echec
 
     def question_au_sujet_maj_lag_global_et_status_stimulus(
         self, stimulus: Stimulus
@@ -124,9 +131,9 @@ class Experience:
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
         reponse_du_sujet: str = self.le_sujet_repond()
-        if self.is_sujet_right(reponse_du_sujet, stimulus.statut):
+        if self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.succes:
             self.lag_global += 1
-        else:
+        elif self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.echec:
             self.lag_global -= 1
         print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
         resultat = Resultat(
