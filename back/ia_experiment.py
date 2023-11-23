@@ -1,7 +1,6 @@
 import random as rd
 
 import numpy as np
-
 from src.experiment import Experience, ReponseSujet, StatusStimulus, Stimulus
 from src.resultat import Resultat
 

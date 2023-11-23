@@ -3,8 +3,7 @@ import random
 import streamlit as st
 import streamlit.components.v1 as components
 
-from front.experiment_js import js_script_optimized
-from src.experiment import (
+from back.experiment import (
     Experience,
     ReponseSujet,
     StatusStimulus,
@@ -12,7 +11,8 @@ from src.experiment import (
     TypeSucces,
     save_result,
 )
-from src.resultat import Resultat
+from back.resultat import Resultat
+from front.experiment_js import js_script_optimized
 
 col1, col2, col3, col4 = st.columns(4)
 LIMIT_BEFORE_DATA_SAVING = 160
