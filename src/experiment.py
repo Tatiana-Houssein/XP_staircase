@@ -13,13 +13,13 @@ def save_result(liste_resultat: list[Resultat]) -> None:
         columns=[
             "tour",
             "lag_global",
+            "lag_initial_stimulus",
             "numero_stimulus",
             "reponse_correct",
             "reponse_sujet",
             "type_erreur_tds",
         ],
     )
-    print(df_result.head())
     next_csv_number = get_next_number_for_wrtitning_csv() + 1
     csv_path = f"data/results_{next_csv_number}.csv"
     df_result.to_csv(csv_path, index=False)
@@ -41,6 +41,12 @@ class StatusStimulus(StrEnum):
 class ReponseSujet(StrEnum):
     vu = "vu"
     non_vu = "non vu"
+
+
+class TypeSucces(StrEnum):
+    succes = "succes"
+    echec = "echec"
+    osef = "osef"
 
 
 class Stimulus:
@@ -105,15 +111,16 @@ class Experience:
         self,
         reponse_sujet: str,
         status_stimulus: str,
-    ) -> bool:
+    ) -> TypeSucces:
         type_erreur = self.type_erreur_du_sujet(reponse_sujet, status_stimulus)
         print(type_erreur)
         if type_erreur in [
-            TypeErreur.rejet_correct,
             TypeErreur.detection_correct,
         ]:
-            return True
-        return False
+            return TypeSucces.succes
+        if type_erreur == TypeErreur.rejet_correct:
+            return TypeSucces.osef
+        return TypeSucces.echec
 
     def question_au_sujet_maj_lag_global_et_status_stimulus(
         self, stimulus: Stimulus
@@ -124,14 +131,15 @@ class Experience:
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
         reponse_du_sujet: str = self.le_sujet_repond()
-        if self.is_sujet_right(reponse_du_sujet, stimulus.statut):
+        if self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.succes:
             self.lag_global += 1
-        else:
+        elif self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.echec:
             self.lag_global -= 1
         print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
+            lag_initial_stimulus=stimulus.lag_initial,
             numero_stimulus=stimulus.numero,
             reponse_correct=stimulus.statut,
             reponse_sujet=reponse_du_sujet,
@@ -146,7 +154,6 @@ class Experience:
             self.pool_vus.remove(stimulus)
 
     def prochain_stimulus(self) -> Stimulus:
-        print("PROCHAIN")
         print(f"pool vus taile: {len(self.pool_vus)}")
         for stimulus in self.pool_vus:
             if stimulus.lag == 0:
@@ -171,6 +178,16 @@ class Experience:
         self.mise_a_jour_lag_pool_vu()  #####
         self.question_au_sujet_maj_lag_global_et_status_stimulus(stimulus_choisi)
 
+    def is_condition_arret_remplie(self) -> bool:
+        """Renvoie True si l'experience doit s'arrêter.
+
+        Returns:
+            bool:
+        """
+        if len(self.pool_non_vus) > 0:
+            return False
+        return True
+
     def deroulement_expe(self) -> None:
         """
         D'abord, suppression des stimuli vu deux du pool_vue
@@ -178,7 +195,7 @@ class Experience:
         pool_non_vus ne sont pas vides.
         Avant, on supprime de la liste tous les stimuli vu deux fois du pool_vus
         """
-        while len(self.pool_non_vus) > 0:
+        while not self.is_condition_arret_remplie():
             for stimulus in self.pool_vus:
                 if stimulus.statut == StatusStimulus.vu_deux_fois:
                     self.pool_vus.remove(stimulus)

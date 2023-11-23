@@ -1,6 +1,5 @@
-import csv
+import random
 
-import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 
@@ -10,6 +9,8 @@ from src.experiment import (
     ReponseSujet,
     StatusStimulus,
     Stimulus,
+    TypeSucces,
+    save_result,
 )
 from src.resultat import Resultat
 
@@ -17,18 +18,11 @@ col1, col2, col3, col4 = st.columns(4)
 LIMIT_BEFORE_DATA_SAVING = 160
 
 
-def save_result(liste_resultat: list[Resultat]) -> pd.DataFrame:
-    # sauvegarde de la liste des résultats
-    return pd.DataFrame(
-        liste_resultat,
-        columns=[
-            "tour",
-            "lag_global",
-            "numero_stimulus",
-            "reponse_correct",
-            "reponse_sujet",
-        ],
-    )
+def api_sauvegarde_du_resultat() -> None:
+    """Fonction spécifique du front pour écrire le CSV de résultat."""
+    st.session_state["id_face"] = -1
+    liste_resultat = st.session_state["experiment"].liste_resultat
+    save_result(liste_resultat)
 
 
 def display_face(id_face: int) -> None:
@@ -37,11 +31,15 @@ def display_face(id_face: int) -> None:
 
 
 if "experiment" not in st.session_state:
-    l_stim = [Stimulus(i) for i in range(1, 120)]
+    list_id = list(range(1, 120))
+    random.shuffle(list_id)
+    l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
         l_stim,
         5,
     )
+
+
 if "current_stimulus" not in st.session_state:
     st.session_state["current_stimulus"] = st.session_state[
         "experiment"
@@ -50,30 +48,30 @@ if "current_stimulus" not in st.session_state:
 if "id_face" not in st.session_state:
     st.session_state["id_face"] = st.session_state["current_stimulus"].numero
 
-if st.session_state["experiment"].tour == LIMIT_BEFORE_DATA_SAVING:
-    print("TADAAAA")
-    data = save_result(st.session_state["experiment"].liste_resultat)
-    with open("Database.csv", "a", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(data.to_numpy().tolist())
-
 
 def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
     experiment: Experience = st.session_state["experiment"]
     print(f"EEEEEEEEEEEEEEEEEEEE {experiment.tour} EEEEEEEEEEEEEEEEE")
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
-    if experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut):
+    if (
+        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
+        == TypeSucces.succes
+    ):
         experiment.lag_global += 1
-    else:
+    elif (
+        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
+        == TypeSucces.echec
+    ):
         experiment.lag_global -= 1
     resultat = Resultat(
         tour=experiment.tour,
         lag_global=experiment.lag_global,
+        lag_initial_stimulus=current_stimulus.lag_initial,
         numero_stimulus=current_stimulus.numero,
-        reponse_correct=current_stimulus.statut,
-        reponse_sujet=reponse_du_sujet,
-        type_erreur_tds=experiment.type_erreur_du_sujet(
-            reponse_du_sujet, current_stimulus.statut
+        reponse_correct=str(current_stimulus.statut),
+        reponse_sujet=str(reponse_du_sujet),
+        type_erreur_tds=str(
+            experiment.type_erreur_du_sujet(reponse_du_sujet, current_stimulus.statut)
         ),
     )
     experiment.liste_resultat.append(resultat)
@@ -90,11 +88,17 @@ def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
 
 
 def answer_vu() -> None:
-    anwser_to_face_recognition(ReponseSujet.vu)
+    if st.session_state["experiment"].is_condition_arret_remplie():
+        api_sauvegarde_du_resultat()
+    else:
+        anwser_to_face_recognition(ReponseSujet.vu)
 
 
 def answer_non_vu() -> None:
-    anwser_to_face_recognition(ReponseSujet.non_vu)
+    if st.session_state["experiment"].is_condition_arret_remplie():
+        api_sauvegarde_du_resultat()
+    else:
+        anwser_to_face_recognition(ReponseSujet.non_vu)
 
 
 components.html(
