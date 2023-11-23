@@ -15,7 +15,6 @@ from back.resultat import Resultat
 from front.experiment_js import js_script_optimized
 
 col1, col2, col3, col4 = st.columns(4)
-LIMIT_BEFORE_DATA_SAVING = 160
 
 
 def api_sauvegarde_du_resultat() -> None:
@@ -91,14 +90,14 @@ def answer_vu() -> None:
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
     else:
-        anwser_to_face_recognition(ReponseSujet.vu)
+        anwser_to_face_recognition(reponse_du_sujet=ReponseSujet.vu)
 
 
 def answer_non_vu() -> None:
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
     else:
-        anwser_to_face_recognition(ReponseSujet.non_vu)
+        anwser_to_face_recognition(reponse_du_sujet=ReponseSujet.non_vu)
 
 
 components.html(
