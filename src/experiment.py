@@ -5,6 +5,8 @@ import pandas as pd
 from src.io import get_next_number_for_wrtitning_csv
 from src.resultat import Resultat
 
+# caca
+
 
 def save_result(liste_resultat: list[Resultat]) -> None:
     # sauvegarde de la liste des résultats
