@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeSucces
+from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeReponseSujet
 from back.io import save_result
 from back.resultat import Resultat
 
@@ -66,16 +66,16 @@ class Experience:
         self,
         reponse_sujet: str,
         status_stimulus: str,
-    ) -> TypeSucces:
+    ) -> TypeReponseSujet:
         type_erreur = self.type_erreur_du_sujet(reponse_sujet, status_stimulus)
         print(type_erreur)
         if type_erreur in [
             TypeErreur.detection_correct,
         ]:
-            return TypeSucces.succes
+            return TypeReponseSujet.succes
         if type_erreur == TypeErreur.rejet_correct:
-            return TypeSucces.osef
-        return TypeSucces.echec
+            return TypeReponseSujet.osef
+        return TypeReponseSujet.echec
 
     def traitement_reponse_sujet(
         self,
@@ -87,9 +87,15 @@ class Experience:
         donné.
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
-        if self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.succes:
+        if (
+            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            == TypeReponseSujet.succes
+        ):
             self.lag_global += 1
-        elif self.is_sujet_right(reponse_du_sujet, stimulus.statut) == TypeSucces.echec:
+        elif (
+            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            == TypeReponseSujet.echec
+        ):
             self.lag_global -= 1
         print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
         resultat = Resultat(

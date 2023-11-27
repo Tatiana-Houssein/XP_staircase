@@ -19,7 +19,7 @@ class ReponseSujet(StrEnum):
     non_vu = "non vu"
 
 
-class TypeSucces(StrEnum):
+class TypeReponseSujet(StrEnum):
     succes = "succes"
     echec = "echec"
     osef = "osef"
