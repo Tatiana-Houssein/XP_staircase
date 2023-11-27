@@ -3,7 +3,8 @@ from collections.abc import Callable
 
 import numpy as np
 
-from back.experiment import Experience, ReponseSujet, StatusStimulus, Stimulus
+from back.constantes import ReponseSujet, StatusStimulus
+from back.experiment import Experience, Stimulus
 
 
 def probabilite_de_reussite(x: float, lag_limit: int) -> float:

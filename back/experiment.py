@@ -1,53 +1,8 @@
 from collections.abc import Callable
-from enum import StrEnum
 
-import pandas as pd
-
-from back.io import get_next_number_for_wrtitning_csv
+from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeSucces
+from back.io import save_result
 from back.resultat import Resultat
-
-
-def save_result(liste_resultat: list[Resultat]) -> None:
-    # sauvegarde de la liste des résultats
-    df_result = pd.DataFrame(
-        liste_resultat,
-        columns=[
-            "tour",
-            "lag_global",
-            "lag_initial_stimulus",
-            "numero_stimulus",
-            "reponse_correct",
-            "reponse_sujet",
-            "type_erreur_tds",
-        ],
-    )
-    next_csv_number = get_next_number_for_wrtitning_csv() + 1
-    csv_path = f"data/results_{next_csv_number}.csv"
-    df_result.to_csv(csv_path, index=False)
-
-
-class TypeErreur(StrEnum):
-    detection_correct = "detection correct"  # sujet vu & stimulus vu
-    omission = "omission"  # sujet non vu VS stimulus vu
-    fausse_alarme = "fausse alarme"  # sujet vu VS stimulus non vu
-    rejet_correct = "rejet correct"  # sujet non vu VS stimulus non vu
-
-
-class StatusStimulus(StrEnum):
-    vu = "vu"
-    non_vu = "non vu"
-    vu_deux_fois = "vu deux fois"
-
-
-class ReponseSujet(StrEnum):
-    vu = "vu"
-    non_vu = "non vu"
-
-
-class TypeSucces(StrEnum):
-    succes = "succes"
-    echec = "echec"
-    osef = "osef"
 
 
 class Stimulus:

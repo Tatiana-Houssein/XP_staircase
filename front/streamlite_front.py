@@ -3,13 +3,13 @@ import random
 import streamlit as st
 import streamlit.components.v1 as components
 
+from back.constantes import ReponseSujet
 from back.experiment import (
     Experience,
-    ReponseSujet,
     Stimulus,
     le_sujet_repond,
-    save_result,
 )
+from back.io import save_result
 from front.experiment_js import js_script_optimized
 
 col1, col2, col3, col4 = st.columns(4)
