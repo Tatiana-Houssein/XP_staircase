@@ -7,7 +7,6 @@ from back.constantes import ReponseSujet
 from back.experiment import (
     Experience,
     Stimulus,
-    le_sujet_repond,
 )
 from back.io import save_result
 from front.experiment_js import js_script_optimized
@@ -35,7 +34,7 @@ if "experiment" not in st.session_state:
     st.session_state["experiment"] = Experience(
         liste_stimuli=l_stim,
         lag_initial=2,
-        fonction_question_au_sujet=le_sujet_repond,
+        fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
     )
 
 if "current_stimulus" not in st.session_state:

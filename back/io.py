@@ -16,10 +16,6 @@ def get_next_number_for_wrtitning_csv() -> int:
     return next_number
 
 
-if __name__ == "__main__":
-    print(get_next_number_for_wrtitning_csv())
-
-
 def save_result(liste_resultat: list[Resultat]) -> None:
     # sauvegarde de la liste des résultats
     df_result = pd.DataFrame(
@@ -37,3 +33,7 @@ def save_result(liste_resultat: list[Resultat]) -> None:
     next_csv_number = get_next_number_for_wrtitning_csv() + 1
     csv_path = f"data/results_{next_csv_number}.csv"
     df_result.to_csv(csv_path, index=False)
+
+
+if __name__ == "__main__":
+    print(get_next_number_for_wrtitning_csv())
