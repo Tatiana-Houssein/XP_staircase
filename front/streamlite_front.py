@@ -6,12 +6,10 @@ import streamlit.components.v1 as components
 from back.experiment import (
     Experience,
     ReponseSujet,
-    StatusStimulus,
     Stimulus,
-    TypeSucces,
+    le_sujet_repond,
     save_result,
 )
-from back.resultat import Resultat
 from front.experiment_js import js_script_optimized
 
 col1, col2, col3, col4 = st.columns(4)
@@ -19,6 +17,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 def api_sauvegarde_du_resultat() -> None:
     """Fonction spécifique du front pour écrire le CSV de résultat."""
+    print("-------------SVG CSV---------------------")
     st.session_state["id_face"] = -1
     liste_resultat = st.session_state["experiment"].liste_resultat
     save_result(liste_resultat)
@@ -30,55 +29,35 @@ def display_face(id_face: int) -> None:
 
 
 if "experiment" not in st.session_state:
-    list_id = list(range(1, 120))
+    list_id = list(range(1, 6))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
-        l_stim,
-        5,
+        liste_stimuli=l_stim,
+        lag_initial=2,
+        fonction_question_au_sujet=le_sujet_repond,
     )
-
 
 if "current_stimulus" not in st.session_state:
     st.session_state["current_stimulus"] = st.session_state[
         "experiment"
-    ].prochain_stimulus()
+    ].choix_prochain_stimulus()
 
 if "id_face" not in st.session_state:
     st.session_state["id_face"] = st.session_state["current_stimulus"].numero
 
 
 def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
+    print("---------------C L I C K----------------------------")
     experiment: Experience = st.session_state["experiment"]
-    print(f"EEEEEEEEEEEEEEEEEEEE {experiment.tour} EEEEEEEEEEEEEEEEE")
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
-    if (
-        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
-        == TypeSucces.succes
-    ):
-        experiment.lag_global += 1
-    elif (
-        experiment.is_sujet_right(reponse_du_sujet, current_stimulus.statut)
-        == TypeSucces.echec
-    ):
-        experiment.lag_global -= 1
-    resultat = Resultat(
-        tour=experiment.tour,
-        lag_global=experiment.lag_global,
-        lag_initial_stimulus=current_stimulus.lag_initial,
-        numero_stimulus=current_stimulus.numero,
-        reponse_correct=str(current_stimulus.statut),
-        reponse_sujet=str(reponse_du_sujet),
-        type_erreur_tds=str(
-            experiment.type_erreur_du_sujet(reponse_du_sujet, current_stimulus.statut)
-        ),
+    print(f"n° stim: {current_stimulus.numero}, tour: {experiment.tour}")
+    experiment.traitement_reponse_sujet(
+        reponse_du_sujet=reponse_du_sujet,
+        stimulus=current_stimulus,
     )
-    experiment.liste_resultat.append(resultat)
+    current_stimulus = experiment.choix_prochain_stimulus()
     experiment.mise_a_jour_lag_pool_vu()
-    current_stimulus.mise_a_jour_status()
-    if current_stimulus.statut == StatusStimulus.vu_deux_fois:
-        experiment.pool_vus.remove(current_stimulus)
-    current_stimulus = experiment.prochain_stimulus()
     experiment.tour += 1
     st.session_state["experiment"] = experiment
     st.session_state["current_stimulus"] = current_stimulus
