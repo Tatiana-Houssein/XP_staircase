@@ -49,11 +49,23 @@ class Experience:
             if stimulus.lag < 0:
                 stimulus.lag = 0
 
-    def type_erreur_du_sujet(
+    def get_type_erreur_du_sujet(
         self,
         reponse_sujet: str,
         status_stimulus: str,
     ) -> str:
+        """Renvoie le type d'erreur du sujet.
+
+        Dépend de la réponse du sujet et du status du stimulus.
+        Peut-être detection ou rejet correct, ommission, fausse alarme.
+
+        Args:
+            reponse_sujet (str):
+            status_stimulus (str):
+
+        Returns:
+            str:
+        """
         if status_stimulus == StatusStimulus.non_vu:
             if reponse_sujet == ReponseSujet.non_vu:
                 return TypeErreur.rejet_correct
@@ -67,7 +79,16 @@ class Experience:
         reponse_sujet: str,
         status_stimulus: str,
     ) -> TypeReponseSujet:
-        type_erreur = self.type_erreur_du_sujet(reponse_sujet, status_stimulus)
+        """Traite la réponse. Renvoie succes, echec ou osef.
+
+        Args:
+            reponse_sujet (str):
+            status_stimulus (str):
+
+        Returns:
+            TypeReponseSujet:
+        """
+        type_erreur = self.get_type_erreur_du_sujet(reponse_sujet, status_stimulus)
         print(type_erreur)
         if type_erreur in [
             TypeErreur.detection_correct,
@@ -106,7 +127,7 @@ class Experience:
             reponse_correct=str(stimulus.statut),
             reponse_sujet=str(reponse_du_sujet),
             type_erreur_tds=str(
-                self.type_erreur_du_sujet(reponse_du_sujet, stimulus.statut)
+                self.get_type_erreur_du_sujet(reponse_du_sujet, stimulus.statut)
             ),
         )
         self.liste_resultat.append(resultat)
@@ -116,6 +137,14 @@ class Experience:
             self.pool_vus.remove(stimulus)
 
     def choix_prochain_stimulus(self) -> Stimulus:
+        """Choisis le prochain stimulus a devoir être présenté.
+
+        Si un stimulus du pool vu a lag de 0, c'est lui.
+        Sinon on ajoute un stuimulus du pool non vu.
+
+        Returns:
+            Stimulus:
+        """
         print(
             f"#pool vus: {len(self.pool_vus)}, #pool non vus: {len(self.pool_non_vus)}"
         )

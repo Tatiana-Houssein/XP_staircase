@@ -17,7 +17,7 @@ col1, col2, col3, col4 = st.columns(4)
 def api_sauvegarde_du_resultat() -> None:
     """Fonction spécifique du front pour écrire le CSV de résultat."""
     print("-------------SVG CSV---------------------")
-    st.session_state["id_face"] = -1
+    st.session_state["id_face"] = -1  # Affiche logo de fin.
     liste_resultat = st.session_state["experiment"].liste_resultat
     save_result(liste_resultat)
 
@@ -28,6 +28,7 @@ def display_face(id_face: int) -> None:
 
 
 if "experiment" not in st.session_state:
+    # Crée une variable experiment dans le dict des session_state
     list_id = list(range(1, 6))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
@@ -38,15 +39,24 @@ if "experiment" not in st.session_state:
     )
 
 if "current_stimulus" not in st.session_state:
+    # Crée une variable current_stimulus dans le dict des session_state
     st.session_state["current_stimulus"] = st.session_state[
         "experiment"
     ].choix_prochain_stimulus()
 
 if "id_face" not in st.session_state:
+    # Crée une variable id_face dans le dict des session_state
     st.session_state["id_face"] = st.session_state["current_stimulus"].numero
 
 
 def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
+    """Mîme le comportement de la méthode déroulement_un_tour.
+
+    Mais l'ordre de la séquence doit être légèrement modifié içi.
+
+    Args:
+        reponse_du_sujet (str):
+    """
     print("---------------C L I C K----------------------------")
     experiment: Experience = st.session_state["experiment"]
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
