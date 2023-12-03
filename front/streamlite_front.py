@@ -29,12 +29,12 @@ def display_face(id_face: int) -> None:
 
 if "experiment" not in st.session_state:
     # Crée une variable experiment dans le dict des session_state
-    list_id = list(range(1, 6))
+    list_id = list(range(1, 60))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
         liste_stimuli=l_stim,
-        lag_initial=2,
+        lag_initial=15,
         fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
     )
 

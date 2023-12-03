@@ -118,7 +118,10 @@ class Experience:
             == TypeReponseSujet.echec
         ):
             self.lag_global -= 1
+            if self.lag_global < 0:
+                self.lag_global = 0
         print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
+        print(f"Lag actuel: {self.lag_global}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
