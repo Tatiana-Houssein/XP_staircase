@@ -1,4 +1,5 @@
 import random
+import time
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -99,4 +100,7 @@ with st.sidebar:
     st.button("LEFT", on_click=answer_non_vu, key="LEFT", use_container_width=True)
     st.button("RIGHT", on_click=answer_vu, key="RIGHT", use_container_width=True)
 
-display_face(st.session_state["id_face"])
+with st.empty():
+    display_face(st.session_state["id_face"])
+    time.sleep(0.5)  # 0.5 millisecond
+    display_face(0)
