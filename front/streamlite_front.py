@@ -12,7 +12,7 @@ from back.experiment import (
 from back.io import save_result
 from front.experiment_js import js_script_optimized
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 
 
 def api_sauvegarde_du_resultat() -> None:
@@ -30,12 +30,12 @@ def display_face(id_face: int) -> None:
 
 if "experiment" not in st.session_state:
     # Crée une variable experiment dans le dict des session_state
-    list_id = list(range(1, 60))
+    list_id = list(range(1, 160))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
         liste_stimuli=l_stim,
-        lag_initial=15,
+        lag_initial=2,
         fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
     )
 
@@ -100,7 +100,15 @@ with st.sidebar:
     st.button("LEFT", on_click=answer_non_vu, key="LEFT", use_container_width=True)
     st.button("RIGHT", on_click=answer_vu, key="RIGHT", use_container_width=True)
 
-with st.empty():
-    display_face(st.session_state["id_face"])
-    time.sleep(0.5)  # 0.5 millisecond
-    display_face(0)
+with col1:
+    st.write(" ")
+
+
+with col2:  # noqa: SIM117
+    with st.empty():
+        display_face(st.session_state["id_face"])
+        time.sleep(0.3)  # 0.5 millisecond
+        display_face(0)
+
+with col3:
+    st.write(" ")
