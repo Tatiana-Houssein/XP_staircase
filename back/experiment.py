@@ -1,5 +1,6 @@
 from collections.abc import Callable
 
+from back.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
 from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeReponseSujet
 from back.io import save_result
 from back.resultat import Resultat
@@ -33,8 +34,8 @@ class Experience:
         lag_initial: int,
         fonction_question_au_sujet: Callable[..., str],
     ) -> None:
-        self.pool_non_vus = liste_stimuli  ###########
-        self.pool_vus: list[Stimulus] = []  ###########
+        self.pool_non_vus = liste_stimuli
+        self.pool_vus: list[Stimulus] = []
         self.lag_global = lag_initial
         self.tour: int = 0
         self.liste_resultat: list[Resultat] = []
@@ -112,16 +113,16 @@ class Experience:
             self.is_sujet_right(reponse_du_sujet, stimulus.statut)
             == TypeReponseSujet.succes
         ):
-            self.lag_global += 1
+            self.lag_global += AUGMENTATION_LAG
         elif (
             self.is_sujet_right(reponse_du_sujet, stimulus.statut)
             == TypeReponseSujet.echec
         ):
-            self.lag_global -= 1
+            self.lag_global -= DIMINUTION_LAG
             if self.lag_global < 0:
                 self.lag_global = 0
-        print(f"Réponse sujet: {reponse_du_sujet} || Satus stimulus: {stimulus.statut}")
-        print(f"Lag actuel: {self.lag_global}")
+        # 'print(f"Rép sujet: {reponse_du_sujet} || Status stimulus: {stimulus.statut}")
+        print(f"Lag actuel: {self.lag_global}, lag ini stim: {stimulus.lag_initial}")
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
@@ -206,6 +207,6 @@ if __name__ == "__main__":
     l_stimuli = [Stimulus(i) for i in range(10)]
     Experience(
         liste_stimuli=l_stimuli,
-        lag_initial=3,
+        lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=le_sujet_repond,
     ).deroulement_expe()

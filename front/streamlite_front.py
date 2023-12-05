@@ -4,6 +4,7 @@ import time
 import streamlit as st
 import streamlit.components.v1 as components
 
+from back.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
 from back.constantes import ReponseSujet
 from back.experiment import (
     Experience,
@@ -30,12 +31,12 @@ def display_face(id_face: int) -> None:
 
 if "experiment" not in st.session_state:
     # Crée une variable experiment dans le dict des session_state
-    list_id = list(range(1, 160))
+    list_id = list(range(1, TAILLE_POOL_NON_VU))
     random.shuffle(list_id)
     l_stim = [Stimulus(i) for i in list_id]
     st.session_state["experiment"] = Experience(
         liste_stimuli=l_stim,
-        lag_initial=2,
+        lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
     )
 
@@ -107,7 +108,7 @@ with col1:
 with col2:  # noqa: SIM117
     with st.empty():
         display_face(st.session_state["id_face"])
-        time.sleep(0.3)  # 0.5 millisecond
+        time.sleep(TEMPS_EXPOSITION)  # 0.5 millisecond
         display_face(0)
 
 with col3:
