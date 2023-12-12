@@ -101,6 +101,7 @@ with st.sidebar:
     st.button("LEFT", on_click=answer_non_vu, key="LEFT", use_container_width=True)
     st.button("RIGHT", on_click=answer_vu, key="RIGHT", use_container_width=True)
 
+
 with col1:
     st.write(" ")
 
@@ -108,8 +109,22 @@ with col1:
 with col2:  # noqa: SIM117
     with st.empty():
         display_face(st.session_state["id_face"])
-        time.sleep(TEMPS_EXPOSITION)  # 0.5 millisecond
+        time.sleep(TEMPS_EXPOSITION)
         display_face(0)
 
 with col3:
     st.write(" ")
+
+c1, c2, c3, c4, c5, c6 = st.columns(6)
+with c1:
+    st.button("1", on_click=answer_non_vu, key="1")
+with c2:
+    st.button("2", on_click=answer_non_vu, key="2")
+with c3:
+    st.button("3", on_click=answer_non_vu)
+with c4:
+    st.button("4", on_click=answer_non_vu)
+with c5:
+    st.button("5", on_click=answer_non_vu)
+with c6:
+    st.button("6", on_click=answer_non_vu)
