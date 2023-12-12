@@ -38,6 +38,7 @@ def save_result(liste_resultat: list[Resultat]) -> None:
             "reponse_correct",
             "reponse_sujet",
             "type_erreur_tds",
+            "nombre_sujet",
         ],
     )
     next_csv_number = get_next_number_for_writing_csv() + 1

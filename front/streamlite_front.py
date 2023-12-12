@@ -51,7 +51,7 @@ if "id_face" not in st.session_state:
     st.session_state["id_face"] = st.session_state["current_stimulus"].numero
 
 
-def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
+def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
     """Mîme le comportement de la méthode déroulement_un_tour.
 
     Mais l'ordre de la séquence doit être légèrement modifié içi.
@@ -59,13 +59,13 @@ def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
     Args:
         reponse_du_sujet (str):
     """
-    print("---------------C L I C K----------------------------")
     experiment: Experience = st.session_state["experiment"]
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
     print(f"n° stim: {current_stimulus.numero}, tour: {experiment.tour}")
     experiment.traitement_reponse_sujet(
         reponse_du_sujet=reponse_du_sujet,
         stimulus=current_stimulus,
+        nombre_sujet=number,
     )
     current_stimulus = experiment.choix_prochain_stimulus()
     experiment.mise_a_jour_lag_pool_vu()
@@ -76,18 +76,21 @@ def anwser_to_face_recognition(reponse_du_sujet: str) -> None:
     st.session_state["id_face"] = current_stimulus.numero
 
 
-def answer_vu() -> None:
+def answer_number(number: int) -> None:
+    print(len(st.session_state["experiment"].pool_non_vus))
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
+    print(f"---------------C L I C K----{number}--------------------")
+    if number < 4:  # noqa: PLR2004
+        anwser_to_face_recognition(
+            reponse_du_sujet=ReponseSujet.non_vu,
+            number=number,
+        )
     else:
-        anwser_to_face_recognition(reponse_du_sujet=ReponseSujet.vu)
-
-
-def answer_non_vu() -> None:
-    if st.session_state["experiment"].is_condition_arret_remplie():
-        api_sauvegarde_du_resultat()
-    else:
-        anwser_to_face_recognition(reponse_du_sujet=ReponseSujet.non_vu)
+        anwser_to_face_recognition(
+            reponse_du_sujet=ReponseSujet.vu,
+            number=number,
+        )
 
 
 components.html(
@@ -95,11 +98,6 @@ components.html(
     height=0,
     width=0,
 )
-with st.sidebar:
-    st.button("L", on_click=answer_non_vu, key="L")
-    st.button("R", on_click=answer_vu, key="R")
-    st.button("LEFT", on_click=answer_non_vu, key="LEFT", use_container_width=True)
-    st.button("RIGHT", on_click=answer_vu, key="RIGHT", use_container_width=True)
 
 
 with col1:
@@ -117,14 +115,14 @@ with col3:
 
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
-    st.button("1", on_click=answer_non_vu, key="1")
+    st.button("1", on_click=answer_number, args=(1,))
 with c2:
-    st.button("2", on_click=answer_non_vu, key="2")
+    st.button("2", on_click=answer_number, args=(2,))
 with c3:
-    st.button("3", on_click=answer_non_vu)
+    st.button("3", on_click=answer_number, args=(3,))
 with c4:
-    st.button("4", on_click=answer_non_vu)
+    st.button("4", on_click=answer_number, args=(4,))
 with c5:
-    st.button("5", on_click=answer_non_vu)
+    st.button("5", on_click=answer_number, args=(5,))
 with c6:
-    st.button("6", on_click=answer_non_vu)
+    st.button("6", on_click=answer_number, args=(6,))

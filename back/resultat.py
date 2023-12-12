@@ -10,3 +10,4 @@ class Resultat:
     reponse_correct: str
     reponse_sujet: str
     type_erreur_tds: str
+    nombre_sujet: int

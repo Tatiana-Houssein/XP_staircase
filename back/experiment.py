@@ -103,6 +103,7 @@ class Experience:
         self,
         reponse_du_sujet: str,
         stimulus: Stimulus,
+        nombre_sujet: int = -1,
     ) -> None:
         """
         Le lag global est adapté à la bonne ou mauvaise réponse du sujet au stimulus
@@ -133,6 +134,7 @@ class Experience:
             type_erreur_tds=str(
                 self.get_type_erreur_du_sujet(reponse_du_sujet, stimulus.statut)
             ),
+            nombre_sujet=nombre_sujet,
         )
         self.liste_resultat.append(resultat)
 
