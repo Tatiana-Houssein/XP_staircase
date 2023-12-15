@@ -81,7 +81,7 @@ def answer_number(number: int) -> None:
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
     print(f"---------------C L I C K----{number}--------------------")
-    if number < 6:  # noqa: PLR2004
+    if number < 4:  # noqa: PLR2004
         anwser_to_face_recognition(
             reponse_du_sujet=ReponseSujet.non_vu,
             number=number,
@@ -113,7 +113,7 @@ with col2:  # noqa: SIM117
 with col3:
     st.write(" ")
 
-c1, c2, c3, c4, c5, c6, c7, c8, c9, c10 = st.columns(10)
+c1, c2, c3, c4, c5, c6 = st.columns(6)
 with c1:
     st.button("1", on_click=answer_number, args=(1,))
 with c2:
@@ -126,13 +126,6 @@ with c5:
     st.button("5", on_click=answer_number, args=(5,))
 with c6:
     st.button("6", on_click=answer_number, args=(6,))
-with c7:
-    st.button("7", on_click=answer_number, args=(7,))
-with c8:
-    st.button("8", on_click=answer_number, args=(8,))
-with c9:
-    st.button("9", on_click=answer_number, args=(9,))
-with c10:
-    st.button("10 ", on_click=answer_number, args=(10,))
+
 
 st.image("echelle.png")
