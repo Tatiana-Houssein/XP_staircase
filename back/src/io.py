@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from back.resultat import Resultat
+from back.src.resultat import Resultat
 
 
 def get_next_number_for_writing_csv() -> int:

@@ -12,7 +12,7 @@ export class StimulusService {
   constructor(private httpClient: HttpClient ) {}
 
   getTestToken(): Observable<any> {
-    const token = this.httpClient.get<Stimulus>(`${this.url}/test-token`);
+    const token = this.httpClient.get<Stimulus>(`${this.url}/first-stimulus`);
     return token;
   }
 

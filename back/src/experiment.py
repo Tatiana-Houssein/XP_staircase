@@ -1,7 +1,7 @@
 from collections.abc import Callable
 
-from back.src.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
-from back.src.constantes import (
+from back.src.constantes import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
+from back.src.enum_constantes import (
     ReponseSujet,
     StatusStimulus,
     TypeErreur,

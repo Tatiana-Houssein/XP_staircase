@@ -3,7 +3,7 @@ from collections.abc import Callable
 
 import numpy as np
 
-from back.src.constantes import ReponseSujet, StatusStimulus
+from back.src.enum_constantes import ReponseSujet, StatusStimulus
 from back.src.experiment import Experience, Stimulus
 
 

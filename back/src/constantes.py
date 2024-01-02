@@ -1,25 +1,6 @@
-from enum import StrEnum
-
-
-class TypeErreur(StrEnum):
-    detection_correct = "detection correct"  # sujet vu & stimulus vu
-    omission = "omission"  # sujet non vu VS stimulus vu
-    fausse_alarme = "fausse alarme"  # sujet vu VS stimulus non vu
-    rejet_correct = "rejet correct"  # sujet non vu VS stimulus non vu
-
-
-class StatusStimulus(StrEnum):
-    vu = "vu"
-    non_vu = "non vu"
-    vu_deux_fois = "vu deux fois"
-
-
-class ReponseSujet(StrEnum):
-    vu = "vu"
-    non_vu = "non vu"
-
-
-class TypeReponseSujet(StrEnum):
-    succes = "succes"
-    echec = "echec"
-    osef = "osef"
+AUGMENTATION_LAG = 1
+DIMINUTION_LAG = 2
+LAG_INITIAL = 3
+TAILLE_POOL_NON_VU = 160
+TEMPS_EXPOSITION = 0.3  # en milliseconds
+PICKLE_NAME = "experiment.pkl"

@@ -4,8 +4,8 @@ import time
 import streamlit as st
 import streamlit.components.v1 as components
 
-from back.src.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
-from back.src.constantes import ReponseSujet
+from back.src.constantes import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
+from back.src.enum_constantes import ReponseSujet
 from back.src.experiment import (
     Experience,
     Stimulus,
