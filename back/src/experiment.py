@@ -1,9 +1,14 @@
 from collections.abc import Callable
 
-from back.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
-from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeReponseSujet
-from back.io import save_result
-from back.resultat import Resultat
+from back.src.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
+from back.src.constantes import (
+    ReponseSujet,
+    StatusStimulus,
+    TypeErreur,
+    TypeReponseSujet,
+)
+from back.src.io import save_result
+from back.src.resultat import Resultat
 
 
 class Stimulus:

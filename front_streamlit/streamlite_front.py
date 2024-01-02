@@ -3,15 +3,15 @@ import time
 
 import streamlit as st
 import streamlit.components.v1 as components
-from front.experiment_js import js_script_optimized
 
-from back.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
-from back.constantes import ReponseSujet
-from back.experiment import (
+from back.src.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
+from back.src.constantes import ReponseSujet
+from back.src.experiment import (
     Experience,
     Stimulus,
 )
-from back.io import save_result
+from back.src.io import save_result
+from front_streamlit.experiment_js import js_script_optimized
 
 col1, col2, col3 = st.columns(3)
 
