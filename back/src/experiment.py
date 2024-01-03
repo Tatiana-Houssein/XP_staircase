@@ -45,6 +45,7 @@ class Experience:
         self.tour: int = 0
         self.liste_resultat: list[Resultat] = []
         self.fonction_question_au_sujet = fonction_question_au_sujet
+        self.update_current_stimulus()
 
     def mise_a_jour_lag_pool_vu(self) -> None:
         """
@@ -52,6 +53,7 @@ class Experience:
         """
         for stimulus in self.pool_vus:
             stimulus.lag -= 1
+
             if stimulus.lag < 0:
                 stimulus.lag = 0
 
@@ -95,7 +97,6 @@ class Experience:
             TypeReponseSujet:
         """
         type_erreur = self.get_type_erreur_du_sujet(reponse_sujet, status_stimulus)
-        print(type_erreur)
         if type_erreur in [
             TypeErreur.detection_correct,
         ]:
@@ -107,7 +108,6 @@ class Experience:
     def traitement_reponse_sujet(
         self,
         reponse_du_sujet: str,
-        stimulus: Stimulus,
         nombre_sujet: int = -1,
     ) -> None:
         """
@@ -115,37 +115,44 @@ class Experience:
         donné.
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
+        print(self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut))
         if (
-            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut)
             == TypeReponseSujet.succes
         ):
             self.lag_global += AUGMENTATION_LAG
         elif (
-            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut)
             == TypeReponseSujet.echec
         ):
             self.lag_global -= DIMINUTION_LAG
             if self.lag_global < 0:
                 self.lag_global = 0
-        # 'print(f"Rép sujet: {reponse_du_sujet} || Status stimulus: {stimulus.statut}")
-        print(f"Lag actuel: {self.lag_global}, lag ini stim: {stimulus.lag_initial}")
+        print(
+            f"Rép suj: {reponse_du_sujet} || Stat stim: {self.current_stimulus.statut}"
+        )
+        print(
+            f"L_actu: {self.lag_global},l_ini stim: {self.current_stimulus.lag_initial}"
+        )
         resultat = Resultat(
             tour=self.tour,
             lag_global=self.lag_global,
-            lag_initial_stimulus=stimulus.lag_initial,
-            numero_stimulus=stimulus.numero,
-            reponse_correct=str(stimulus.statut),
+            lag_initial_stimulus=self.current_stimulus.lag_initial,
+            numero_stimulus=self.current_stimulus.numero,
+            reponse_correct=str(self.current_stimulus.statut),
             reponse_sujet=str(reponse_du_sujet),
             type_erreur_tds=str(
-                self.get_type_erreur_du_sujet(reponse_du_sujet, stimulus.statut)
+                self.get_type_erreur_du_sujet(
+                    reponse_du_sujet, self.current_stimulus.statut
+                )
             ),
             nombre_sujet=nombre_sujet,
         )
         self.liste_resultat.append(resultat)
 
-        stimulus.mise_a_jour_status()
-        if stimulus.statut == StatusStimulus.vu_deux_fois:
-            self.pool_vus.remove(stimulus)
+        self.current_stimulus.mise_a_jour_status()
+        if self.current_stimulus.statut == StatusStimulus.vu_deux_fois:
+            self.pool_vus.remove(self.current_stimulus)
 
     def choix_prochain_stimulus(self) -> Stimulus:
         """Choisis le prochain stimulus a devoir être présenté.
@@ -169,6 +176,10 @@ class Experience:
         self.pool_non_vus.pop(0)
         return stimulus
 
+    def update_current_stimulus(self) -> None:
+        self.current_stimulus = self.choix_prochain_stimulus()
+        self.mise_a_jour_lag_pool_vu()
+
     def deroulement_un_tour(self) -> None:
         """
         Un tour de jeu.
@@ -176,13 +187,11 @@ class Experience:
         Puis on pose la question sur ce stimulus.
         Suivant la réponse (bonne ou mauvaise) on ajuste le lag global.
         """
-        stimulus_choisi = self.choix_prochain_stimulus()
-        print(f"Lag: {self.lag_global}, status : {stimulus_choisi.statut}")
+        self.update_current_stimulus()
+        print(f"Lag: {self.lag_global}, status : {self.current_stimulus.statut}")
         self.mise_a_jour_lag_pool_vu()
         reponse_du_sujet = self.fonction_question_au_sujet()
-        self.traitement_reponse_sujet(
-            reponse_du_sujet=reponse_du_sujet, stimulus=stimulus_choisi
-        )
+        self.traitement_reponse_sujet(reponse_du_sujet=reponse_du_sujet)
 
     def is_condition_arret_remplie(self) -> bool:
         """Renvoie True si l'experience doit s'arrêter.

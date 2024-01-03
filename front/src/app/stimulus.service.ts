@@ -11,9 +11,14 @@ export class StimulusService {
 
   constructor(private httpClient: HttpClient ) {}
 
-  getTestToken(): Observable<any> {
+  getFirstStimulus(): Observable<any> {
     const token = this.httpClient.get<Stimulus>(`${this.url}/first-stimulus`);
     return token;
+  }
+
+  sendSubjectAnswer(dejaVu: boolean): Observable<any> {
+    const stimulus = this.httpClient.post<boolean>(`${this.url}/next-stimulus`, dejaVu);
+    return stimulus;
   }
 
 }
