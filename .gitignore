@@ -15,3 +15,7 @@ test.ipynb
 data/
 
 *.code-workspace
+
+front/.angular
+front/node_modules
+front/

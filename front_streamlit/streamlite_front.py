@@ -3,7 +3,6 @@ import time
 
 import streamlit as st
 import streamlit.components.v1 as components
-from front.experiment_js import js_script_optimized
 
 from back.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
 from back.constantes import ReponseSujet
@@ -12,6 +11,7 @@ from back.experiment import (
     Stimulus,
 )
 from back.io import save_result
+from front_streamlit.experiment_js import js_script_optimized
 
 col1, col2, col3 = st.columns(3)
 
@@ -20,6 +20,7 @@ def api_sauvegarde_du_resultat() -> None:
     """Fonction spécifique du front pour écrire le CSV de résultat."""
     print("-------------SVG CSV---------------------")
     st.session_state["id_face"] = -1  # Affiche logo de fin.
+    print(f"session_state, id_face n°{st.session_state['id_face']}")
     liste_resultat = st.session_state["experiment"].liste_resultat
     save_result(liste_resultat)
 
@@ -77,20 +78,21 @@ def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
 
 
 def answer_number(number: int) -> None:
-    print(len(st.session_state["experiment"].pool_non_vus))
+    print(f"# pool non vu: {len(st.session_state['experiment'].pool_non_vus)}")
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
-    print(f"---------------C L I C K----{number}--------------------")
-    if number < 4:  # noqa: PLR2004
-        anwser_to_face_recognition(
-            reponse_du_sujet=ReponseSujet.non_vu,
-            number=number,
-        )
     else:
-        anwser_to_face_recognition(
-            reponse_du_sujet=ReponseSujet.vu,
-            number=number,
-        )
+        print(f"---------------Click choisi: {number}--------------------")
+        if number < 4:  # noqa: PLR2004
+            anwser_to_face_recognition(
+                reponse_du_sujet=ReponseSujet.non_vu,
+                number=number,
+            )
+        else:
+            anwser_to_face_recognition(
+                reponse_du_sujet=ReponseSujet.vu,
+                number=number,
+            )
 
 
 components.html(
@@ -104,11 +106,15 @@ with col1:
     st.write(" ")
 
 
-with col2:  # noqa: SIM117
-    with st.empty():
+with col2:
+    print(f"id_face n°{st.session_state['id_face']}")
+    if st.session_state["id_face"] != -1:
+        with st.empty():
+            display_face(st.session_state["id_face"])
+            time.sleep(TEMPS_EXPOSITION)
+            display_face(0)
+    else:
         display_face(st.session_state["id_face"])
-        time.sleep(TEMPS_EXPOSITION)
-        display_face(0)
 
 with col3:
     st.write(" ")
