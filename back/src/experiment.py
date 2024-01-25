@@ -176,6 +176,12 @@ class Experience:
         self.pool_non_vus.pop(0)
         return stimulus
 
+    def guess_next_stimulus_id(self) -> int:
+        for stimulus in self.pool_vus:
+            if stimulus.lag == 0:
+                return stimulus.numero
+        return self.pool_non_vus[0].numero
+
     def update_current_stimulus(self) -> None:
         self.current_stimulus = self.choix_prochain_stimulus()
         self.mise_a_jour_lag_pool_vu()

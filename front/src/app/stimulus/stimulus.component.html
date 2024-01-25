@@ -1,4 +1,4 @@
 <p>{{ stimulus | json }}</p>
-<img src="{{ cheminImage }}" alt="image"/>
-<button type="button" (click)="dejaVu()">Déjà Vu</button>
-<button type="button" (click)="jamaisVu()">Jamais Vu</button>
+<img ngSrc="{{ cheminImage }}" alt="image" width="200" hieght = "200" priority/>
+<button type="button" (click)="dejaVu()" [disabled]="isButtonsDisabled">Déjà Vu</button>
+<button type="button" (click)="jamaisVu()" [disabled]="isButtonsDisabled">Jamais Vu</button>

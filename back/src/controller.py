@@ -30,12 +30,16 @@ def load_experiment() -> Experience:
         return pickle.load(f)  # noqa: S301
 
 
-def call_back_next_stimulus() -> int:
+def call_back_next_stimulus() -> dict[str, int]:
     experiment = load_experiment()
     experiment.update_current_stimulus()
     print(f"BBB, {experiment.current_stimulus.numero}")
     save_experiment(experiment)
-    return experiment.current_stimulus.numero
+    return {
+        "id": experiment.current_stimulus.numero,
+        "nextId": experiment.guess_next_stimulus_id(),
+        "lagInitial": experiment.current_stimulus.lag_initial,
+    }
 
 
 def call_back_answer(deja_vu: bool) -> None:  # noqa: FBT001
