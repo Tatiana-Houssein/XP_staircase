@@ -4,7 +4,12 @@ import time
 import streamlit as st
 import streamlit.components.v1 as components
 
-from back.configuration import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
+from back.configuration import (
+    LAG_INITIAL,
+    PREFIX_STIMULUS,
+    TAILLE_POOL_NON_VU,
+    TEMPS_EXPOSITION,
+)
 from back.constantes import ReponseSujet
 from back.experiment import (
     Experience,
@@ -26,7 +31,7 @@ def api_sauvegarde_du_resultat() -> None:
 
 
 def display_face(id_face: int) -> None:
-    path = f"tokens/token_{id_face}.png"
+    path = f"stimuli/{PREFIX_STIMULUS}{id_face}.png"
     st.image(path)
 
 
