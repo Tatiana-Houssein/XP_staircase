@@ -4,7 +4,12 @@ import time
 import streamlit as st
 import streamlit.components.v1 as components
 
-from back.src.constantes import LAG_INITIAL, TAILLE_POOL_NON_VU, TEMPS_EXPOSITION
+from back.src.constantes import (
+    LAG_INITIAL,
+    PREFIX_STIMULUS,
+    TAILLE_POOL_NON_VU,
+    TEMPS_EXPOSITION,
+)
 from back.src.enum_constantes import ReponseSujet
 from back.src.experiment import (
     Experience,
@@ -20,12 +25,13 @@ def api_sauvegarde_du_resultat() -> None:
     """Fonction spécifique du front pour écrire le CSV de résultat."""
     print("-------------SVG CSV---------------------")
     st.session_state["id_face"] = -1  # Affiche logo de fin.
+    print(f"session_state, id_face n°{st.session_state['id_face']}")
     liste_resultat = st.session_state["experiment"].liste_resultat
     save_result(liste_resultat)
 
 
 def display_face(id_face: int) -> None:
-    path = f"tokens/token_{id_face}.png"
+    path = f"stimuli/{PREFIX_STIMULUS}{id_face}.png"
     st.image(path)
 
 
@@ -59,8 +65,8 @@ def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
     Args:
         reponse_du_sujet (str):
     """
-    experiment: Experience = st.session_state["experiment"]
-    current_stimulus: Stimulus = st.session_state["current_stimulus"]
+    experiment = st.session_state["experiment"]
+    current_stimulus = st.session_state["current_stimulus"]
     print(f"n° stim: {current_stimulus.numero}, tour: {experiment.tour}")
     experiment.traitement_reponse_sujet(
         reponse_du_sujet=reponse_du_sujet,
@@ -77,20 +83,21 @@ def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
 
 
 def answer_number(number: int) -> None:
-    print(len(st.session_state["experiment"].pool_non_vus))
+    print(f"# pool non vu: {len(st.session_state['experiment'].pool_non_vus)}")
     if st.session_state["experiment"].is_condition_arret_remplie():
         api_sauvegarde_du_resultat()
-    print(f"---------------C L I C K----{number}--------------------")
-    if number < 4:  # noqa: PLR2004
-        anwser_to_face_recognition(
-            reponse_du_sujet=ReponseSujet.non_vu,
-            number=number,
-        )
     else:
-        anwser_to_face_recognition(
-            reponse_du_sujet=ReponseSujet.vu,
-            number=number,
-        )
+        print(f"---------------Click choisi: {number}--------------------")
+        if number < 4:  # noqa: PLR2004
+            anwser_to_face_recognition(
+                reponse_du_sujet=ReponseSujet.non_vu,
+                number=number,
+            )
+        else:
+            anwser_to_face_recognition(
+                reponse_du_sujet=ReponseSujet.vu,
+                number=number,
+            )
 
 
 components.html(
@@ -104,11 +111,15 @@ with col1:
     st.write(" ")
 
 
-with col2:  # noqa: SIM117
-    with st.empty():
+with col2:
+    print(f"id_face n°{st.session_state['id_face']}")
+    if st.session_state["id_face"] != -1:
+        with st.empty():
+            display_face(st.session_state["id_face"])
+            time.sleep(TEMPS_EXPOSITION)
+            display_face(0)
+    else:
         display_face(st.session_state["id_face"])
-        time.sleep(TEMPS_EXPOSITION)
-        display_face(0)
 
 with col3:
     st.write(" ")
