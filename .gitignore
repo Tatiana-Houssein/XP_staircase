@@ -9,6 +9,9 @@ __pycache__/
 cat_tokens/
 tokens/
 
+front/front/.angular
+front/front/node_modules
+
 
 test.ipynb
 
