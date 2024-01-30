@@ -6,12 +6,8 @@ __pycache__/
 
 .ruff_cache/
 
-cat_tokens/
+chats/
 tokens/
-
-front/front/.angular
-front/front/node_modules
-
 
 test.ipynb
 
@@ -19,8 +15,5 @@ data/
 
 *.code-workspace
 
-back/src/dump_data/
 *.pkl
-front/.angular
-front/node_modules
-front/
+**/*.pkl

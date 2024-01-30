@@ -1,18 +1,18 @@
 import pickle
-import random
 
 from back.config import PICKEL_PATH
-from back.src.constantes import LAG_INITIAL, TAILLE_POOL_NON_VU
+from back.src.constantes import LAG_INITIAL
 from back.src.enum_constantes import ReponseSujet
-from back.src.experiment import Experience, Stimulus, le_sujet_repond
+from back.src.experiment import (
+    Experience,
+    initialisation_liste_des_stimuli,
+    le_sujet_repond,
+)
 
 
 def create_new_experiment() -> None:
-    list_id = list(range(1, TAILLE_POOL_NON_VU))
-    random.shuffle(list_id)
-
     experiment = Experience(
-        liste_stimuli=[Stimulus(i) for i in list_id],
+        liste_stimuli=initialisation_liste_des_stimuli(),
         lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=le_sujet_repond,
     )
@@ -33,10 +33,10 @@ def load_experiment() -> Experience:
 def call_back_next_stimulus() -> dict[str, int]:
     experiment = load_experiment()
     experiment.update_current_stimulus()
-    print(f"BBB, {experiment.current_stimulus.numero}")
+    print(f"BBB, {experiment.current_stimulus.id}")
     save_experiment(experiment)
     return {
-        "id": experiment.current_stimulus.numero,
+        "id": experiment.current_stimulus.id,
         "nextId": experiment.guess_next_stimulus_id(),
         "lagInitial": experiment.current_stimulus.lag_initial,
     }
