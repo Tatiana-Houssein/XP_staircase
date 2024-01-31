@@ -19,6 +19,11 @@ class ReponseSujet(StrEnum):
     non_vu = "non vu"
 
 
+class ReponseIA(StrEnum):
+    vu = "vu"
+    non_vu = "non vu"
+
+
 class TypeReponseSujet(StrEnum):
     succes = "succes"
     echec = "echec"

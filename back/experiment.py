@@ -1,7 +1,15 @@
+import random
 from collections.abc import Callable
+from enum import StrEnum
 
 from back.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
-from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeReponseSujet
+from back.constantes import (
+    ReponseIA,
+    ReponseSujet,
+    StatusStimulus,
+    TypeErreur,
+    TypeReponseSujet,
+)
 from back.io import save_result
 from back.resultat import Resultat
 
@@ -142,6 +150,15 @@ class Experience:
         if stimulus.statut == StatusStimulus.vu_deux_fois:
             self.pool_vus.remove(stimulus)
 
+    def choix_rep_ia(self) -> StrEnum:
+        """
+        Choix de ce que va présenter IA comme réponse
+        """
+        u = random.randint(0, 1)  # noqa: S311
+        if u == 0:
+            return ReponseIA.vu
+        return ReponseIA.non_vu
+
     def choix_prochain_stimulus(self) -> Stimulus:
         """Choisis le prochain stimulus a devoir être présenté.
 
@@ -150,10 +167,13 @@ class Experience:
 
         Returns:
             Stimulus:
+        ET déterminer quel rep IA
         """
         print(
             f"#pool vus: {len(self.pool_vus)}, #pool non vus: {len(self.pool_non_vus)}"
         )
+        reponse_ia = self.choix_rep_ia()
+        print(reponse_ia)
         for stimulus in self.pool_vus:
             if stimulus.lag == 0:
                 return stimulus
@@ -162,6 +182,7 @@ class Experience:
         stimulus.lag_initial = self.lag_global
         self.pool_vus.append(stimulus)
         self.pool_non_vus.pop(0)
+
         return stimulus
 
     def deroulement_un_tour(self) -> None:
@@ -172,6 +193,7 @@ class Experience:
         Suivant la réponse (bonne ou mauvaise) on ajuste le lag global.
         """
         stimulus_choisi = self.choix_prochain_stimulus()
+
         print(f"Lag: {self.lag_global}, status : {stimulus_choisi.statut}")
         self.mise_a_jour_lag_pool_vu()
         reponse_du_sujet = self.fonction_question_au_sujet()
