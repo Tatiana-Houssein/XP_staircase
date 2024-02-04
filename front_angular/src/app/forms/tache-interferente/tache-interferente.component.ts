@@ -1,6 +1,7 @@
 // second-page.component.ts
 
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,9 +10,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./tache-interferente.component.scss']
 })
 export class TacheInterferenteComponent {
-  constructor(private router: Router) {}
+  questionForm: FormGroup;
 
-  goBack(): void {
+  constructor(private router: Router, private fb: FormBuilder) {
+    this.questionForm = this.fb.group({
+      answer: ['', [Validators.required, this.isIntegerValidator]]
+    })
+  }
+
+  isIntegerValidator(control: any) {
+    return Number.isInteger(Number(control.value)) ? null : {notAnInteger : true};
+  }
+
+  submitForm() {
+    // Handle form submission
+    console.log('Form submitted:', this.questionForm.value);
+    this.goBackExperiment();
+  }
+
+  onEnter() {
+    // Function to be called when Enter is pressed
+    console.log('Enter pressed');
+  }
+
+  onBlur() {
+    // Function to be called when the input field loses focus
+    console.log('Input field blurred');
+
+  }
+
+  goBackExperiment(): void {
     this.router.navigate(['/experiment']);
   }
 }

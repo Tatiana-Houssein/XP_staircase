@@ -1,4 +1,31 @@
-<div>
-  <p>This is the second page!</p>
-  <button (click)="goBack()">Go Back</button>
+
+<div class="form-container">
+  <div class="centered-text">
+    <h1>Your Centered Text</h1>
+  </div>
+  <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
+    <div class="question-container">
+      <label for="answer" class="question-label"></label>
+      <input
+        type="text"
+        id="answer"
+        formControlName="answer"
+        (keyup.enter)="onEnter()"
+        (blur)="onBlur()"
+        autocomplete="nope"
+      />
+      <div *ngIf="questionForm.get('answer')!.hasError('notAnInteger')">
+        La réponse est un nombre entier !
+      </div>
+    </div>
+    <div class="button-container">
+      <button type="submit" [disabled]="questionForm.invalid">Envoyer la réponse</button>
+    </div>
+  </form>
 </div>
+
+
+<!-- <div>
+  <p>This is the second page!</p>
+  <button (click)="goBackExperiment()">Go Back</button>
+</div> -->

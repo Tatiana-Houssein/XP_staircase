@@ -13,6 +13,7 @@ import { DespairComponent } from './header/despair/despair.component';
 import { AppEffects } from './@store/effects';
 import { EffectsModule } from '@ngrx/effects';
 import { UserInfoComponent } from './forms/user-info/user-info.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { UserInfoComponent } from './forms/user-info/user-info.component';
       {}
     ), // 'app' is the key for your reducer
     EffectsModule.forRoot([AppEffects]),
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
