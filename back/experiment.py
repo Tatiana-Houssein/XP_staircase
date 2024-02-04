@@ -14,6 +14,18 @@ from back.io import save_result
 from back.resultat import Resultat
 
 
+def generer_nombres_avec_retenue() -> tuple:
+    nombre1 = random.randint(10, 99)  # noqa: S311
+    chiffre1 = nombre1 % 10
+    nombre2 = random.randint(10 - chiffre1, 99)  # noqa: S311
+    return nombre1, nombre2
+
+
+def generer_operation() -> None:
+    nombre1, nombre2 = generer_nombres_avec_retenue()
+    print(f"Opération : {nombre1} + {nombre2}")
+
+
 class Stimulus:
     def __init__(self, numero: int) -> None:
         self.numero = numero
