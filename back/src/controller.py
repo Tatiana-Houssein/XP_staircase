@@ -1,4 +1,5 @@
 import pickle
+from typing import Any
 
 from back.config import PICKEL_PATH
 from back.src.constantes import LAG_INITIAL
@@ -30,15 +31,16 @@ def load_experiment() -> Experience:
         return pickle.load(f)  # noqa: S301
 
 
-def call_back_next_stimulus() -> dict[str, int]:
+def call_back_next_stimulus() -> dict[str, Any]:
     experiment = load_experiment()
     experiment.update_current_stimulus()
     print(f"BBB, {experiment.current_stimulus.id}")
     save_experiment(experiment)
     return {
-        "id": experiment.current_stimulus.id,
+        "currentId": experiment.current_stimulus.id,
+        "currentIaDisplay": "non",
         "nextId": experiment.guess_next_stimulus_id(),
-        "lagInitial": experiment.current_stimulus.lag_initial,
+        "nextIaDisplay": "non",
     }
 
 

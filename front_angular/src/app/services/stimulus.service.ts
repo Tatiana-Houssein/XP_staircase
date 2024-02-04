@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Stimulus } from './stimulus.model';
+import { Stimulus } from '../stimulus.model';
 @Injectable({
   providedIn: 'root'
 })
