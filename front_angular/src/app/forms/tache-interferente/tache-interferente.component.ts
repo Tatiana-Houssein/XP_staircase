@@ -1,6 +1,6 @@
 // second-page.component.ts
 
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -11,14 +11,17 @@ import { AppState, selectQuestionInterferente } from 'src/app/@store/app.state';
   templateUrl: './tache-interferente.component.html',
   styleUrls: ['./tache-interferente.component.scss']
 })
-export class TacheInterferenteComponent {
+export class TacheInterferenteComponent implements OnInit{
   questionForm: FormGroup;
   questionInterferente!: string;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private store: Store<AppState>) {
+    private store: Store<AppState>,
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+    ) {
       this.questionForm = this.fb.group({
         answer: ['', [Validators.required, this.isIntegerValidator]]
       })
@@ -27,6 +30,14 @@ export class TacheInterferenteComponent {
           this.questionInterferente = questionInterferente
         });
 
+  }
+
+  ngOnInit(): void {
+    this.setFocus();
+  }
+
+  setFocus() {
+    this.renderer.selectRootElement(this.elementRef.nativeElement.querySelector('input')).focus();
   }
 
   isIntegerValidator(control: any) {

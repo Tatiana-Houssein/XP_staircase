@@ -7,12 +7,14 @@
     <div class="question-container">
       <label for="answer" class="question-label"></label>
       <input
+        #inputField
         type="text"
         id="answer"
         formControlName="answer"
         (keyup.enter)="onEnter()"
         (blur)="onBlur()"
         autocomplete="nope"
+        appSetFocus
       />
       <div *ngIf="questionForm.get('answer')!.hasError('notAnInteger')">
         La réponse est un nombre entier !
