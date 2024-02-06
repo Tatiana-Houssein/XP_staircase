@@ -48,7 +48,7 @@ class ExperienceTest(Experience):
             stimulus_choisi, self.lag_limit
         )
         self.traitement_reponse_sujet(
-            reponse_du_sujet=reponse_du_sujet, stimulus=stimulus_choisi
+            reponse_du_sujet=reponse_du_sujet,
         )
 
 

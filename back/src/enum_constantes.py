@@ -14,6 +14,11 @@ class StatusStimulus(StrEnum):
     vu_deux_fois = "vu deux fois"
 
 
+class FlagIA(StrEnum):
+    vu = "vu selon IA"
+    non_vu = "non vu selon IA"
+
+
 class ReponseSujet(StrEnum):
     vu = "vu"
     non_vu = "non vu"
