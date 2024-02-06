@@ -15,11 +15,13 @@ export const appReducer = createReducer(
     }
   )),
   on(receivedBackAnswer, (state, { backData }) => (
-    console.log("RECEIVING BACK DATAS"),
+    console.log("RECEIVING BACK DATAS", backData),
     {
       ...state,
       currentId: backData.currentId,
       nextId: backData.nextId,
+      questionInterferente: state.nextQuestionInterferente,
+      nextQuestionInterferente: backData.questionInterferente,
       isExperimentLaunched: true,
     }
   ))

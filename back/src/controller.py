@@ -9,6 +9,7 @@ from back.src.experiment import (
     initialisation_liste_des_stimuli,
     le_sujet_repond,
 )
+from back.src.tache_interferente import question_tache_interferente
 
 
 def create_new_experiment() -> None:
@@ -41,6 +42,7 @@ def call_back_next_stimulus() -> dict[str, Any]:
         "currentIaDisplay": "non",
         "nextId": experiment.guess_next_stimulus_id(),
         "nextIaDisplay": "non",
+        "questionInterferente": question_tache_interferente(),
     }
 
 

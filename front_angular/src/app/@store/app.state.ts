@@ -5,6 +5,8 @@ export interface AppState {
   currentId: number;
   currentName: string;
   nextId: number;
+  questionInterferente: string;
+  nextQuestionInterferente: string;
 }
 
 export const initialState: AppState = {
@@ -12,6 +14,8 @@ export const initialState: AppState = {
   currentId: 1,
   currentName: 'Initial Name',
   nextId: 2,
+  questionInterferente: "",
+  nextQuestionInterferente: "",
 };
 
 // Feature Selector
@@ -23,3 +27,5 @@ export const selectCurrentId = createSelector(selectAppState, (state) => state.c
 export const selectNextId = createSelector(selectAppState, (state) => state.nextId);
 
 export const selectIsExperimentLaunched = createSelector(selectAppState, (state) => state.isExperimentLaunched);
+
+export const selectQuestionInterferente = createSelector(selectAppState, (state) => state.questionInterferente);

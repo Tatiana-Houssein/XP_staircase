@@ -3,6 +3,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState, selectQuestionInterferente } from 'src/app/@store/app.state';
 
 @Component({
   selector: 'app-tache-interferente',
@@ -11,11 +13,20 @@ import { Router } from '@angular/router';
 })
 export class TacheInterferenteComponent {
   questionForm: FormGroup;
+  questionInterferente!: string;
 
-  constructor(private router: Router, private fb: FormBuilder) {
-    this.questionForm = this.fb.group({
-      answer: ['', [Validators.required, this.isIntegerValidator]]
-    })
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private store: Store<AppState>) {
+      this.questionForm = this.fb.group({
+        answer: ['', [Validators.required, this.isIntegerValidator]]
+      })
+      this.store.select(selectQuestionInterferente)
+        .subscribe(questionInterferente => {
+          this.questionInterferente = questionInterferente
+        });
+
   }
 
   isIntegerValidator(control: any) {

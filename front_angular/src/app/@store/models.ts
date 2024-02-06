@@ -5,4 +5,5 @@ export interface BackDatas {
   nextId: number;
   // nextUrl: string;
   nextIaDisplay: string;
+  questionInterferente: string;
 }
