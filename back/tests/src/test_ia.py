@@ -136,10 +136,10 @@ def test_probabilite_lever_flag_vu_selon_status_reel():
     # Given
     tableau = TableauProportionResultatExperience(0, 1, 20, 20)
     # When
-    result_status_vu = tableau.probabilite_de_lever_le_flag_vu_selon_status_reel(
+    result_status_vu = tableau.probabilite_flag_ia_vu(
         StatusStimulus.vu
     )
-    result_status_non_vu = tableau.probabilite_de_lever_le_flag_vu_selon_status_reel(
+    result_status_non_vu = tableau.probabilite_flag_ia_vu(
         StatusStimulus.non_vu
     )
     # Then

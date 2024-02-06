@@ -19,6 +19,7 @@ export const appReducer = createReducer(
     {
       ...state,
       currentId: backData.currentId,
+      currentFlagIA: backData.currentIaDisplay,
       nextId: backData.nextId,
       questionInterferente: state.nextQuestionInterferente,
       nextQuestionInterferente: backData.questionInterferente,

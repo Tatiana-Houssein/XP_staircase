@@ -1,10 +1,34 @@
 from __future__ import annotations
 
+import random as rd
 from dataclasses import dataclass
 
 from scipy.stats import norm
 
-from back.src.enum_constantes import StatusStimulus
+from back.src.enum_constantes import FlagIA, StatusStimulus, StrategyIA
+
+
+def get_ia_flag(
+    tableau_proportion_resultat_experience: TableauProportionResultatExperience,
+    status_stimulus: str,
+    strategy_ia: StrategyIA,
+) -> FlagIA:
+    print("############")
+    print(tableau_proportion_resultat_experience)
+    print(status_stimulus)
+    if strategy_ia == StrategyIA.sans_ia:
+        return FlagIA.pas_de_flag
+    probabilite_vu_par_ia = (
+        tableau_proportion_resultat_experience.probabilite_flag_ia_vu(
+            status_reel=status_stimulus
+        )
+    )
+    print(probabilite_vu_par_ia)
+    u = rd.random()  # noqa: S311
+    print(u)
+    if u < probabilite_vu_par_ia:
+        return FlagIA.vu
+    return FlagIA.non_vu
 
 
 @dataclass
@@ -53,9 +77,7 @@ class TableauProportionResultatExperience:
     def d_prime(self) -> float:
         return compute_d_prime(self.detections_correctes, self.fausses_alarmes)
 
-    def probabilite_de_lever_le_flag_vu_selon_status_reel(
-        self, status_reel: StatusStimulus
-    ) -> float:
+    def probabilite_flag_ia_vu(self, status_reel: str) -> float:
         if status_reel == StatusStimulus.vu:
             return self.detections_correctes / (
                 self.detections_correctes + self.ommissions

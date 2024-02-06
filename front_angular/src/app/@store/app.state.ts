@@ -3,6 +3,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 export interface AppState {
   isExperimentLaunched: boolean;
   currentId: number;
+  currentFlagIA: string;
   currentName: string;
   nextId: number;
   questionInterferente: string;
@@ -12,6 +13,7 @@ export interface AppState {
 export const initialState: AppState = {
   isExperimentLaunched: false,
   currentId: 1,
+  currentFlagIA: "non_vu",
   currentName: 'Initial Name',
   nextId: 2,
   questionInterferente: "",
@@ -29,3 +31,5 @@ export const selectNextId = createSelector(selectAppState, (state) => state.next
 export const selectIsExperimentLaunched = createSelector(selectAppState, (state) => state.isExperimentLaunched);
 
 export const selectQuestionInterferente = createSelector(selectAppState, (state) => state.questionInterferente);
+
+export const selectFlagIA = createSelector(selectAppState, (state) => state.currentFlagIA);

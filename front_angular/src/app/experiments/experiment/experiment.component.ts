@@ -3,7 +3,7 @@ import { ImageService } from '../../services/image.service';
 import { ImagePreloadService } from '../../services/image-preload.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState, selectCurrentId, selectIsExperimentLaunched, selectNextId } from '../../@store/app.state';
+import { AppState, selectCurrentId, selectFlagIA, selectIsExperimentLaunched, selectNextId } from '../../@store/app.state';
 import { loadExperimentComponent, responseUserToStimulus, startNewExperiment } from '../../@store/actions';
 import { increment } from '../../@store/actions';
 
@@ -19,6 +19,7 @@ export class ExperimentComponent implements OnInit {
   nextImageId!: number;
   currentImageUrl!: string;
   nextImageUrl!: string;
+  flagIA!: string;
   imageOpacity = 1; // Initial opacity
   buttonsDisabled = false; // Initial state
 
@@ -47,6 +48,11 @@ export class ExperimentComponent implements OnInit {
       .subscribe(nextId => {
         this.nextImageId = nextId,
         this.nextImageUrl = this.imageService.getImageUrl(nextId)
+      });
+      this.store
+      .select(selectFlagIA)
+      .subscribe(flagIA => {
+        this.flagIA = flagIA
       });
     this.preloadNextImage();
     this.displayImageForLimitedTime(1000);
