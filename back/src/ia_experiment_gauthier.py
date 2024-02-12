@@ -4,7 +4,7 @@ from collections.abc import Callable
 import numpy as np
 
 from back.src.enum_constantes import ReponseSujet, StatusStimulus
-from back.src.experiment import Experience, Stimulus
+from back.src.experiment import Experiment, Stimulus
 
 
 def probabilite_de_reussite(x: float, lag_limit: int) -> float:
@@ -23,7 +23,7 @@ def fonction_reponse_ia(stimulus: Stimulus, lag_limit: int) -> str:
     return ReponseSujet.non_vu
 
 
-class ExperienceTest(Experience):
+class ExperienceTest(Experiment):
     def __init__(
         self,
         liste_stimuli: list[Stimulus],

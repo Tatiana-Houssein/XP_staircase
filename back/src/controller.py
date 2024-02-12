@@ -2,51 +2,45 @@ import pickle
 from typing import Any
 
 from back.config import PICKEL_PATH
-from back.src.constantes import LAG_INITIAL, TABLEAU_PROPORTION_SUR
-from back.src.enum_constantes import ReponseSujet, StrategyIA
-from back.src.experiment import (
-    Experience,
-    initialisation_liste_des_stimuli,
-    le_sujet_repond,
-)
+from back.src.enum_constantes import ReponseSujet
 from back.src.ia import get_ia_flag
+from back.src.meta_experiment import MetaExperiment
 from back.src.tache_interferente import question_tache_interferente
 
 
 def create_new_experiment() -> None:
-    experiment = Experience(
-        liste_stimuli=initialisation_liste_des_stimuli(),
-        lag_initial=LAG_INITIAL,
-        fonction_question_au_sujet=le_sujet_repond,
-    )
-    print(f"AAA, {experiment.current_stimulus}")
-    save_experiment(experiment)
+    meta_experiment = MetaExperiment()
+    save_experiment(meta_experiment)
 
 
-def save_experiment(experiment: Experience) -> None:
+def save_experiment(meta_experiement: MetaExperiment) -> None:
     with open(PICKEL_PATH, "wb") as f:
-        pickle.dump(experiment, f)
+        pickle.dump(meta_experiement, f)
 
 
-def load_experiment() -> Experience:
+def load_experiment() -> MetaExperiment:
     with open(PICKEL_PATH, "rb") as f:
         return pickle.load(f)  # noqa: S301
 
 
 def call_back_next_stimulus() -> dict[str, Any]:
-    experiment = load_experiment()
-    experiment.update_current_stimulus()
-    print(f"BBB, {experiment.current_stimulus.id}")
-    save_experiment(experiment)
+    meta_experiment = load_experiment()
+    meta_experiment.experiment.update_current_stimulus()
+    save_experiment(meta_experiment)
     flag_ia = get_ia_flag(
-        tableau_proportion_resultat_experience=TABLEAU_PROPORTION_SUR,
-        status_stimulus=experiment.current_stimulus.statut,
-        strategy_ia=StrategyIA.sans_fausses_alarmes,
+        tableau_proportion_resultat_experience=meta_experiment.tableau_proportion,
+        status_stimulus=meta_experiment.experiment.current_stimulus.statut,
+        strategy_ia=meta_experiment.strategy_ia,
+    )
+
+    print(
+        f"CURRENT: {meta_experiment.experiment.current_stimulus.id}, NEXT: {meta_experiment.experiment.guess_next_stimulus_id()}"  # noqa: E501
     )
     return {
-        "currentId": experiment.current_stimulus.id,
+        "metaExperimentState": meta_experiment.state,
+        "currentId": meta_experiment.experiment.current_stimulus.id,
         "currentIaDisplay": flag_ia,
-        "nextId": experiment.guess_next_stimulus_id(),
+        "nextId": meta_experiment.experiment.guess_next_stimulus_id(),
         "nextIaDisplay": "non",
         "questionInterferente": question_tache_interferente(),
     }
@@ -54,8 +48,6 @@ def call_back_next_stimulus() -> dict[str, Any]:
 
 def call_back_answer(deja_vu: bool) -> None:  # noqa: FBT001
     answer = ReponseSujet.vu if deja_vu else ReponseSujet.non_vu
-    experiment = load_experiment()
-    print(experiment.lag_global)
-    experiment.traitement_reponse_sujet(answer)
-    save_experiment(experiment)
-    print(experiment.lag_global)
+    meta_experiment = load_experiment()
+    meta_experiment.experiment.traitement_reponse_sujet(answer)
+    save_experiment(meta_experiment)

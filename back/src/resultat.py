@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Resultat:
+class ResultExperiment:
     tour: int
     lag_global: int  # après réponse du sujet
     lag_initial_stimulus: int

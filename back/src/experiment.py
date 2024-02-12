@@ -9,12 +9,13 @@ from back.src.constantes import (
 )
 from back.src.enum_constantes import (
     ReponseSujet,
+    StateMetaExperiment,
     StatusStimulus,
     TypeErreur,
     TypeReponseSujet,
 )
 from back.src.io import save_result
-from back.src.resultat import Resultat
+from back.src.resultat import ResultExperiment
 
 
 class Stimulus:
@@ -51,7 +52,25 @@ def initialisation_liste_des_stimuli() -> list[Stimulus]:
     return [Stimulus(i) for i in liste_id]
 
 
-class Experience:
+def get_dict_of_list_stimuli_for_meta_experiment() -> (
+    dict[StateMetaExperiment, list[Stimulus]]
+):
+    dict_state_meta_to_list_stimuli = {}
+    liste_id = list(range(1, TAILLE_POOL_NON_VU))
+    random.shuffle(liste_id)
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.first] = [
+        Stimulus(i) for i in liste_id if i < len(liste_id) / 3
+    ]
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.second] = [
+        Stimulus(i) for i in liste_id if len(liste_id) / 3 <= i < 2 * len(liste_id) / 3
+    ]
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.third] = [
+        Stimulus(i) for i in liste_id if i >= 2 * len(liste_id) / 3
+    ]
+    return dict_state_meta_to_list_stimuli
+
+
+class Experiment:
     def __init__(
         self,
         liste_stimuli: list[Stimulus],
@@ -63,7 +82,7 @@ class Experience:
         self.pool_vus_deux_fois: list[Stimulus] = []
         self.lag_global = lag_initial
         self.tour: int = 0
-        self.liste_resultat: list[Resultat] = []
+        self.liste_resultat: list[ResultExperiment] = []
         self.fonction_question_au_sujet = fonction_question_au_sujet
         self.update_current_stimulus()
 
@@ -135,7 +154,9 @@ class Experience:
         donné.
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
-        print(self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut))
+        print(
+            f"TYPE ERREUR: {self.get_type_erreur_du_sujet(reponse_du_sujet, self.current_stimulus.statut)}"  # noqa: E501
+        )
         if (
             self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut)
             == TypeReponseSujet.succes
@@ -148,13 +169,7 @@ class Experience:
             self.lag_global -= DIMINUTION_LAG
             if self.lag_global < 0:
                 self.lag_global = 0
-        print(
-            f"Rép suj: {reponse_du_sujet} || Stat stim: {self.current_stimulus.statut}"
-        )
-        print(
-            f"L_glo: {self.lag_global}, l_ini stim: {self.current_stimulus.lag_initial}"
-        )
-        resultat = Resultat(
+        resultat = ResultExperiment(
             tour=self.tour,
             lag_global=self.lag_global,
             lag_initial_stimulus=self.current_stimulus.lag_initial,
@@ -190,9 +205,6 @@ class Experience:
         Returns:
             Stimulus:
         """
-        print(
-            f"#pool vu: {len(self.pool_vus_une_fois)}, #pool non vu: {len(self.pool_non_vus)}"  # noqa: E501
-        )
         for stimulus in self.pool_vus_une_fois:
             if stimulus.lag == 0:
                 return stimulus
@@ -212,9 +224,11 @@ class Experience:
             int
         """
         for stimulus in self.pool_vus_une_fois:
-            if stimulus.lag == 0:
+            if stimulus.lag == 0 and stimulus.id != self.current_stimulus.id:
                 return stimulus.id
-        return self.pool_non_vus[0].id
+        if len(self.pool_non_vus) > 0:
+            return self.pool_non_vus[0].id
+        return -1
 
     def update_current_stimulus(self) -> None:
         """Met à jour le stimulus actuel.
@@ -233,7 +247,6 @@ class Experience:
         Suivant la réponse (bonne ou mauvaise) on ajuste le lag global.
         """
         self.update_current_stimulus()
-        print(f"Lag: {self.lag_global}, status : {self.current_stimulus.statut}")
         reponse_du_sujet = self.fonction_question_au_sujet()
         self.traitement_reponse_sujet(reponse_du_sujet=reponse_du_sujet)
 
@@ -265,7 +278,7 @@ class Experience:
 
 if __name__ == "__main__":
     l_stimuli = [Stimulus(i) for i in range(10)]
-    Experience(
+    Experiment(
         liste_stimuli=l_stimuli,
         lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=le_sujet_repond,

@@ -22,7 +22,6 @@ def first_stimulus():  # noqa: ANN201
 @app.route("/next-stimulus", methods=["POST"])
 def next_stimulus():  # noqa: ANN201
     payload = request.get_json()
-    print(f"PAYLOAD: {payload}")
     call_back_answer(payload)
     dict_next_stimulus = call_back_next_stimulus()
 

@@ -35,3 +35,10 @@ class TypeReponseSujet(StrEnum):
     succes = "succes"
     echec = "echec"
     osef = "osef"
+
+
+class StateMetaExperiment(StrEnum):
+    first = "phase 1"
+    second = "phase 2"
+    third = "phase 3"
+    finish = "termine"

@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from back.src.resultat import Resultat
+from back.src.resultat import ResultExperiment
 
 
 def get_next_number_for_writing_csv() -> int:
@@ -21,7 +21,7 @@ def get_next_number_for_writing_csv() -> int:
     return next_number
 
 
-def save_result(liste_resultat: list[Resultat]) -> None:
+def save_result(liste_resultat: list[ResultExperiment]) -> None:
     """Convertis liste_resultat en dataframe puis exporte en CSV.
 
     Args:

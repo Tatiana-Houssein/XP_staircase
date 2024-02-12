@@ -2,6 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export interface AppState {
   isExperimentLaunched: boolean;
+  stateMetaExperiment: string;
   currentId: number;
   currentFlagIA: string;
   currentName: string;
@@ -12,6 +13,7 @@ export interface AppState {
 
 export const initialState: AppState = {
   isExperimentLaunched: false,
+  stateMetaExperiment: "phase 1",
   currentId: 1,
   currentFlagIA: "non_vu",
   currentName: 'Initial Name',

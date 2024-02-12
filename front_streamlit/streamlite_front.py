@@ -10,7 +10,7 @@ from back.src.constantes import (
 )
 from back.src.enum_constantes import ReponseSujet
 from back.src.experiment import (
-    Experience,
+    Experiment,
     Stimulus,
     initialisation_liste_des_stimuli,
 )
@@ -36,7 +36,7 @@ def display_face(id_face: int) -> None:
 
 if "experiment" not in st.session_state:
     # Crée une variable experiment dans le dict des session_state
-    st.session_state["experiment"] = Experience(
+    st.session_state["experiment"] = Experiment(
         liste_stimuli=initialisation_liste_des_stimuli(),
         lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
@@ -64,7 +64,7 @@ def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
     """
 
     # Traitement réponse sujet
-    experiment: Experience = st.session_state["experiment"]
+    experiment: Experiment = st.session_state["experiment"]
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
     print(f"n° stim: {current_stimulus.id}, tour: {experiment.tour}")
     experiment.traitement_reponse_sujet(

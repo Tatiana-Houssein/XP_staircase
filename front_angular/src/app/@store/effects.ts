@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { loadExperimentComponent, receivedBackAnswer } from './actions';
-import { responseUserToStimulus } from './actions';
+import { loadExperimentComponent, frontReceiveBackAnswer } from './actions';
+import { userRespondToStimulus } from './actions';
 import { filter, map, mergeMap, switchMap, tap, withLatestFrom } from "rxjs";
 import { StimulusService } from "../services/stimulus.service";
 import { AppState, selectIsExperimentLaunched } from "./app.state";
@@ -19,7 +19,7 @@ export class AppEffects {
         this.stimulusService.getFirstStimulus()
       .pipe(
         map((backDatas) =>
-          receivedBackAnswer({
+          frontReceiveBackAnswer({
             backData: backDatas
           })
         )
@@ -27,14 +27,14 @@ export class AppEffects {
 
   responseUserToStimulus$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(responseUserToStimulus),
+      ofType(userRespondToStimulus),
       tap((action) => console.log("responseStimulusEffect trigger")),
       mergeMap((action) =>
         this.stimulusService.sendSubjectAnswer(
           action.responseToStimulus
       ).pipe(
         map((backDatas) =>
-          receivedBackAnswer({
+          frontReceiveBackAnswer({
             backData: backDatas
           })
         )

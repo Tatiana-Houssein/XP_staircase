@@ -1,7 +1,7 @@
 from back.src.enum_constantes import StatusStimulus
 from back.src.ia import (
-    TableauCardinalResultatExperience,
-    TableauProportionResultatExperience,
+    TableCardinalResultExperiment,
+    TableProportionResultExperiment,
     compute_d_prime,
     find_new_detection_correct_corresponding_original_d_prime,
     normal_cumulative_distribution_function,
@@ -12,13 +12,13 @@ import numpy as np
 
 def test_tableau_cardinal_class():
     # Given
-    tableau_original = TableauCardinalResultatExperience(10, 100, 200, 20)
+    tableau_original = TableCardinalResultExperiment(10, 100, 200, 20)
     # When
     result_o2f = tableau_original.transfert_ommissions_to_fausses_alarmes()
     result_f2o = tableau_original.transfert_fausses_alarmes_to_ommissions()
     # Then
-    assert result_o2f == TableauCardinalResultatExperience(1, 100, 200, 29)
-    assert result_f2o == TableauCardinalResultatExperience(29, 100, 200, 1)
+    assert result_o2f == TableCardinalResultExperiment(1, 100, 200, 29)
+    assert result_f2o == TableCardinalResultExperiment(29, 100, 200, 1)
 
 
 def test_normal_inverse_function():
@@ -76,7 +76,7 @@ def test_method_get_tableau_fitting_given_d_prime():
     detections_correctes = 0.49
     rejets_corrects = 0.49
     fausses_alarmes = 0.02
-    tableau_original = TableauProportionResultatExperience(
+    tableau_original = TableProportionResultExperiment(
         ommissions,
         detections_correctes,
         rejets_corrects,
@@ -98,7 +98,7 @@ def test_tableau_porportion_cas_hasard():
     detections_correctes = 0.25
     rejets_corrects = 0.25
     fausses_alarmes = 0.25
-    tableau_original = TableauProportionResultatExperience(
+    tableau_original = TableProportionResultExperiment(
         ommissions,
         detections_correctes,
         rejets_corrects,
@@ -116,7 +116,7 @@ def test_method_get_tableau_fitting_given_d_prime_cas_hasard():
     detections_correctes = 0.25
     rejets_corrects = 0.25
     fausses_alarmes = 0.5
-    tableau_original = TableauProportionResultatExperience(
+    tableau_original = TableProportionResultExperiment(
         ommissions,
         detections_correctes,
         rejets_corrects,
@@ -134,7 +134,7 @@ def test_method_get_tableau_fitting_given_d_prime_cas_hasard():
 
 def test_probabilite_lever_flag_vu_selon_status_reel():
     # Given
-    tableau = TableauProportionResultatExperience(0, 1, 20, 20)
+    tableau = TableProportionResultExperiment(0, 1, 20, 20)
     # When
     result_status_vu = tableau.probabilite_flag_ia_vu(
         StatusStimulus.vu

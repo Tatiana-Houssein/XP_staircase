@@ -9,13 +9,10 @@ from back.src.enum_constantes import FlagIA, StatusStimulus, StrategyIA
 
 
 def get_ia_flag(
-    tableau_proportion_resultat_experience: TableauProportionResultatExperience,
+    tableau_proportion_resultat_experience: TableProportionResultExperiment,
     status_stimulus: str,
     strategy_ia: StrategyIA,
 ) -> FlagIA:
-    print("############")
-    print(tableau_proportion_resultat_experience)
-    print(status_stimulus)
     if strategy_ia == StrategyIA.sans_ia:
         return FlagIA.pas_de_flag
     probabilite_vu_par_ia = (
@@ -23,16 +20,14 @@ def get_ia_flag(
             status_reel=status_stimulus
         )
     )
-    print(probabilite_vu_par_ia)
     u = rd.random()  # noqa: S311
-    print(u)
     if u < probabilite_vu_par_ia:
         return FlagIA.vu
     return FlagIA.non_vu
 
 
 @dataclass
-class TableauCardinalResultatExperience:
+class TableCardinalResultExperiment:
     """Tableau des cardinaux des résultats.
 
     Attention : ommissions et fausses alarmes sont au minimum à 1 !!
@@ -43,31 +38,41 @@ class TableauCardinalResultatExperience:
     rejets_corrects: int
     fausses_alarmes: int
 
-    def transfert_ommissions_to_fausses_alarmes(
-        self
-    ) -> TableauCardinalResultatExperience:
+    def transfert_ommissions_to_fausses_alarmes(self) -> TableCardinalResultExperiment:
         transferred_ommissions = self.ommissions - 1
-        return TableauCardinalResultatExperience(
+        return TableCardinalResultExperiment(
             1,
             self.detections_correctes,
             self.rejets_corrects,
             self.fausses_alarmes + transferred_ommissions,
         )
 
-    def transfert_fausses_alarmes_to_ommissions(
-        self
-    ) -> TableauCardinalResultatExperience:
+    def transfert_fausses_alarmes_to_ommissions(self) -> TableCardinalResultExperiment:
         transferred_fausses_alarmes = self.fausses_alarmes - 1
-        return TableauCardinalResultatExperience(
+        return TableCardinalResultExperiment(
             self.ommissions + transferred_fausses_alarmes,
             self.detections_correctes,
             self.rejets_corrects,
             1,
         )
 
+    def get_corresponding_tableau_proportion(self) -> TableProportionResultExperiment:
+        total = (
+            self.ommissions
+            + self.detections_correctes
+            + self.rejets_corrects
+            + self.fausses_alarmes
+        )
+        return TableProportionResultExperiment(
+            self.ommissions / total,
+            self.detections_correctes / total,
+            self.rejets_corrects / total,
+            self.fausses_alarmes / total,
+        )
+
 
 @dataclass
-class TableauProportionResultatExperience:
+class TableProportionResultExperiment:
     ommissions: float
     detections_correctes: float
     rejets_corrects: float
@@ -86,7 +91,7 @@ class TableauProportionResultatExperience:
 
     def get_tableau_fitting_given_d_prime(
         self, original_d_prime: float
-    ) -> TableauProportionResultatExperience:
+    ) -> TableProportionResultExperiment:
         new_detection_correct = (
             find_new_detection_correct_corresponding_original_d_prime(
                 original_d_prime, self.fausses_alarmes
@@ -96,7 +101,7 @@ class TableauProportionResultatExperience:
             1 - self.ommissions - self.fausses_alarmes - new_detection_correct
         )
 
-        return TableauProportionResultatExperience(
+        return TableProportionResultExperiment(
             self.ommissions,
             new_detection_correct,
             new_rejet_correct,

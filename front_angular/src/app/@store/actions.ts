@@ -4,12 +4,12 @@ import { BackDatas } from './models';
 
 export const increment = createAction('[App] Increment');
 
-export const responseUserToStimulus = createAction(
+export const userRespondToStimulus = createAction(
   'User respond to stimulus',
   props<{ responseToStimulus: boolean; }>()
 );
 
-export const receivedBackAnswer = createAction(
+export const frontReceiveBackAnswer = createAction(
   '[Source] Event',
   props<{ backData: BackDatas; }>()
 );

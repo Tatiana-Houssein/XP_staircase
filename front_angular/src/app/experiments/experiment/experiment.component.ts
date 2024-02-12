@@ -4,7 +4,7 @@ import { ImagePreloadService } from '../../services/image-preload.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState, selectCurrentId, selectFlagIA, selectIsExperimentLaunched, selectNextId } from '../../@store/app.state';
-import { loadExperimentComponent, responseUserToStimulus, startNewExperiment } from '../../@store/actions';
+import { loadExperimentComponent, userRespondToStimulus, startNewExperiment } from '../../@store/actions';
 import { increment } from '../../@store/actions';
 
 
@@ -63,7 +63,7 @@ export class ExperimentComponent implements OnInit {
   }
 
   sendUserAnswerToBack(userAnswer: boolean){
-    this.store.dispatch(responseUserToStimulus({responseToStimulus: userAnswer}));
+    this.store.dispatch(userRespondToStimulus({responseToStimulus: userAnswer}));
   }
 
   preloadNextImage(): void {

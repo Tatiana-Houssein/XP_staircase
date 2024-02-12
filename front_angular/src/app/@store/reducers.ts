@@ -1,5 +1,5 @@
 import { initialState } from './app.state';
-import { receivedBackAnswer } from './actions';
+import { frontReceiveBackAnswer } from './actions';
 import { increment } from './actions';
 
 import { createReducer, on } from '@ngrx/store';
@@ -14,10 +14,11 @@ export const appReducer = createReducer(
       nextId: state.nextId + 1
     }
   )),
-  on(receivedBackAnswer, (state, { backData }) => (
+  on(frontReceiveBackAnswer, (state, { backData }) => (
     console.log("RECEIVING BACK DATAS", backData),
     {
       ...state,
+      stateMetaExperiment: backData.stateMetaExperiment,
       currentId: backData.currentId,
       currentFlagIA: backData.currentIaDisplay,
       nextId: backData.nextId,
