@@ -31,6 +31,9 @@ class Stimulus:
         elif self.statut == StatusStimulus.vu:
             self.statut = StatusStimulus.vu_deux_fois
 
+    def __repr__(self) -> str:
+        return f"Stimulus n°{self.id}."
+
 
 def le_sujet_repond() -> str:
     reponse_sujet = input("Avez vous déjà vu ce visage ?")
@@ -56,16 +59,16 @@ def get_dict_of_list_stimuli_for_meta_experiment() -> (
     dict[StateMetaExperiment, list[Stimulus]]
 ):
     dict_state_meta_to_list_stimuli = {}
-    liste_id = list(range(1, TAILLE_POOL_NON_VU))
+    liste_id = list(range(1, TAILLE_POOL_NON_VU + 1))
     random.shuffle(liste_id)
     dict_state_meta_to_list_stimuli[StateMetaExperiment.first] = [
-        Stimulus(i) for i in liste_id if i < len(liste_id) / 3
+        Stimulus(i) for i in liste_id if i <= len(liste_id) / 3
     ]
     dict_state_meta_to_list_stimuli[StateMetaExperiment.second] = [
-        Stimulus(i) for i in liste_id if len(liste_id) / 3 <= i < 2 * len(liste_id) / 3
+        Stimulus(i) for i in liste_id if len(liste_id) / 3 < i <= 2 * len(liste_id) / 3
     ]
     dict_state_meta_to_list_stimuli[StateMetaExperiment.third] = [
-        Stimulus(i) for i in liste_id if i >= 2 * len(liste_id) / 3
+        Stimulus(i) for i in liste_id if i > 2 * len(liste_id) / 3
     ]
     return dict_state_meta_to_list_stimuli
 
