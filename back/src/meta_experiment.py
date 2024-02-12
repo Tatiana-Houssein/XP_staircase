@@ -13,7 +13,6 @@ from back.src.ia import (
     TableCardinalResultExperiment,
     TableProportionResultExperiment,
 )
-from back.src.io import save_result
 from back.src.resultat import ResultExperiment
 
 
@@ -66,8 +65,8 @@ class MetaExperiment:
         )
 
     def update_meta_experiment_state(self) -> None:
-        if self.experiment.current_stimulus.id == -1:
-            save_result(self.experiment.liste_resultat)
+        if self.experiment.guess_next_stimulus_id() == -1:
+            # TOFIX: save_result(self.experiment.liste_resultat)  # noqa: ERA001
             self.state = go_to_next_state_meta_experiment(self.state)
             self.strategy_ia = DICT_STATE_META_TO_STRATEGY_IA[self.state]
             tableau_cardinaux = extract_table_cardinaux_from_list_result(
@@ -85,3 +84,4 @@ class MetaExperiment:
                 tableau_cardinaux.get_corresponding_tableau_proportion()
             )
             self.experiment = self.initialisation_new_experiment()
+            print(self.experiment.guess_next_stimulus_id())

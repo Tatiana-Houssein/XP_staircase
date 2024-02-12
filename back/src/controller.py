@@ -25,6 +25,9 @@ def load_experiment() -> MetaExperiment:
 
 def call_back_next_stimulus() -> dict[str, Any]:
     meta_experiment = load_experiment()
+    if meta_experiment.experiment.guess_next_stimulus_id() == -1:
+        meta_experiment.update_meta_experiment_state()
+        print(meta_experiment.tableau_proportion)
     meta_experiment.experiment.update_current_stimulus()
     save_experiment(meta_experiment)
     flag_ia = get_ia_flag(

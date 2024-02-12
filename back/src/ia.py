@@ -39,7 +39,7 @@ class TableCardinalResultExperiment:
     fausses_alarmes: int
 
     def transfert_ommissions_to_fausses_alarmes(self) -> TableCardinalResultExperiment:
-        transferred_ommissions = self.ommissions - 1
+        transferred_ommissions = max(0, self.ommissions - 1)
         return TableCardinalResultExperiment(
             1,
             self.detections_correctes,
@@ -48,7 +48,7 @@ class TableCardinalResultExperiment:
         )
 
     def transfert_fausses_alarmes_to_ommissions(self) -> TableCardinalResultExperiment:
-        transferred_fausses_alarmes = self.fausses_alarmes - 1
+        transferred_fausses_alarmes = max(0, self.fausses_alarmes - 1)
         return TableCardinalResultExperiment(
             self.ommissions + transferred_fausses_alarmes,
             self.detections_correctes,

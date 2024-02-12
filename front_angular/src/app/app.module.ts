@@ -14,6 +14,7 @@ import { AppEffects } from './@store/effects';
 import { EffectsModule } from '@ngrx/effects';
 import { UserInfoComponent } from './forms/user-info/user-info.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { InfoSecondTaskComponent } from './forms/info-second-task/info-second-task.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ExperimentComponent,
     TacheInterferenteComponent,
     DespairComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    InfoSecondTaskComponent
   ],
   imports: [
     BrowserModule,

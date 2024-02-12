@@ -35,3 +35,5 @@ export const selectIsExperimentLaunched = createSelector(selectAppState, (state)
 export const selectQuestionInterferente = createSelector(selectAppState, (state) => state.questionInterferente);
 
 export const selectFlagIA = createSelector(selectAppState, (state) => state.currentFlagIA);
+
+export const selectStateMetaExperiment = createSelector(selectAppState, (state) => state.stateMetaExperiment);

@@ -3,7 +3,7 @@ import { ImageService } from '../../services/image.service';
 import { ImagePreloadService } from '../../services/image-preload.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState, selectCurrentId, selectFlagIA, selectIsExperimentLaunched, selectNextId } from '../../@store/app.state';
+import { AppState, selectCurrentId, selectFlagIA, selectIsExperimentLaunched, selectNextId, selectStateMetaExperiment } from '../../@store/app.state';
 import { loadExperimentComponent, userRespondToStimulus, startNewExperiment } from '../../@store/actions';
 import { increment } from '../../@store/actions';
 
@@ -14,6 +14,7 @@ import { increment } from '../../@store/actions';
   styleUrls: ['./experiment.component.scss']
 })
 export class ExperimentComponent implements OnInit {
+  stateMetaExperiment!: string;
   isExperimentLaunched!: boolean;
   currentImageId!: number;
   nextImageId!: number;
@@ -49,10 +50,15 @@ export class ExperimentComponent implements OnInit {
         this.nextImageId = nextId,
         this.nextImageUrl = this.imageService.getImageUrl(nextId)
       });
-      this.store
+    this.store
       .select(selectFlagIA)
       .subscribe(flagIA => {
         this.flagIA = flagIA
+      });
+      this.store
+      .select(selectStateMetaExperiment)
+      .subscribe(stateMetaExperiment => {
+        this.stateMetaExperiment = stateMetaExperiment
       });
     this.preloadNextImage();
     this.displayImageForLimitedTime(1000);
@@ -80,12 +86,20 @@ export class ExperimentComponent implements OnInit {
 
   jamaisVu(){
     this.sendUserAnswerToBack(false);
-    this.router.navigate(['/calcul-mental']);
+    if (this.nextImageId === -1 ) {
+      this.router.navigate(['/info-second-task']);
+    } else {
+      this.router.navigate(['/calcul-mental']);
+    }
   }
 
   dejaVu() {
     this.sendUserAnswerToBack(true);
-    this.router.navigate(['/calcul-mental']);
+    if (this.nextImageId === -1 ) {
+      this.router.navigate(['/info-second-task']);
+    } else {
+      this.router.navigate(['/calcul-mental']);
+    }
   }
 
   private displayImageForLimitedTime(timeDisplay: number): void {
@@ -135,6 +149,8 @@ export class ExperimentComponent implements OnInit {
   }
 
   goToSecondPage(): void {
+
+
     // this.incrementTest();
     this.sendUserAnswerToBack(true);
     this.router.navigate(['/calcul-mental']);
