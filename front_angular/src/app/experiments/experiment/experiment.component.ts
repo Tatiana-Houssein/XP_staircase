@@ -3,15 +3,25 @@ import { ImageService } from '../../services/image.service';
 import { ImagePreloadService } from '../../services/image-preload.service';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState, selectCurrentId, selectFlagIA, selectIsExperimentLaunched, selectNextId, selectStateMetaExperiment } from '../../@store/app.state';
-import { loadExperimentComponent, userRespondToStimulus, startNewExperiment } from '../../@store/actions';
+import {
+  AppState,
+  selectCurrentId,
+  selectFlagIA,
+  selectIsExperimentLaunched,
+  selectNextId,
+  selectStateMetaExperiment,
+} from '../../@store/app.state';
+import {
+  loadExperimentComponent,
+  userRespondToStimulus,
+  startNewExperiment,
+} from '../../@store/actions';
 import { increment } from '../../@store/actions';
-
 
 @Component({
   selector: 'app-experiment',
   templateUrl: './experiment.component.html',
-  styleUrls: ['./experiment.component.scss']
+  styleUrls: ['./experiment.component.scss'],
 })
 export class ExperimentComponent implements OnInit {
   stateMetaExperiment!: string;
@@ -33,43 +43,40 @@ export class ExperimentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select(selectIsExperimentLaunched)
-      .subscribe(isExperimentLanched => {
-        this.isExperimentLaunched = isExperimentLanched
+    this.store
+      .select(selectIsExperimentLaunched)
+      .subscribe((isExperimentLanched) => {
+        this.isExperimentLaunched = isExperimentLanched;
       });
     this.store.dispatch(loadExperimentComponent());
+    this.store.select(selectCurrentId).subscribe((currentId) => {
+      (this.currentImageId = currentId),
+        (this.currentImageUrl = this.imageService.getImageUrl(currentId));
+    });
+    this.store.select(selectNextId).subscribe((nextId) => {
+      (this.nextImageId = nextId),
+        (this.nextImageUrl = this.imageService.getImageUrl(nextId));
+    });
+    this.store.select(selectFlagIA).subscribe((flagIA) => {
+      this.flagIA = flagIA;
+    });
     this.store
-      .select(selectCurrentId)
-      .subscribe(currentId => {
-        this.currentImageId = currentId,
-        this.currentImageUrl = this.imageService.getImageUrl(currentId)
-      });
-    this.store
-      .select(selectNextId)
-      .subscribe(nextId => {
-        this.nextImageId = nextId,
-        this.nextImageUrl = this.imageService.getImageUrl(nextId)
-      });
-    this.store
-      .select(selectFlagIA)
-      .subscribe(flagIA => {
-        this.flagIA = flagIA
-      });
-      this.store
       .select(selectStateMetaExperiment)
-      .subscribe(stateMetaExperiment => {
-        this.stateMetaExperiment = stateMetaExperiment
+      .subscribe((stateMetaExperiment) => {
+        this.stateMetaExperiment = stateMetaExperiment;
       });
     this.preloadNextImage();
     this.displayImageForLimitedTime(1000);
   }
 
-  incrementTest(){
+  incrementTest() {
     this.store.dispatch(increment());
   }
 
-  sendUserAnswerToBack(userAnswer: boolean){
-    this.store.dispatch(userRespondToStimulus({responseToStimulus: userAnswer}));
+  sendUserAnswerToBack(userAnswer: boolean) {
+    this.store.dispatch(
+      userRespondToStimulus({ responseToStimulus: userAnswer })
+    );
   }
 
   preloadNextImage(): void {
@@ -84,9 +91,9 @@ export class ExperimentComponent implements OnInit {
     );
   }
 
-  jamaisVu(){
+  jamaisVu() {
     this.sendUserAnswerToBack(false);
-    if (this.nextImageId === -1 ) {
+    if (this.nextImageId === -1) {
       this.router.navigate(['/info-second-task']);
     } else {
       this.router.navigate(['/calcul-mental']);
@@ -95,7 +102,7 @@ export class ExperimentComponent implements OnInit {
 
   dejaVu() {
     this.sendUserAnswerToBack(true);
-    if (this.nextImageId === -1 ) {
+    if (this.nextImageId === -1) {
       this.router.navigate(['/info-second-task']);
     } else {
       this.router.navigate(['/calcul-mental']);
@@ -114,7 +121,6 @@ export class ExperimentComponent implements OnInit {
       });
     }, timeDisplay);
   }
-
 
   secondButtonClick(): void {
     // Disable the buttons
@@ -149,8 +155,6 @@ export class ExperimentComponent implements OnInit {
   }
 
   goToSecondPage(): void {
-
-
     // this.incrementTest();
     this.sendUserAnswerToBack(true);
     this.router.navigate(['/calcul-mental']);

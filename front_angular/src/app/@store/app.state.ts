@@ -13,27 +13,45 @@ export interface AppState {
 
 export const initialState: AppState = {
   isExperimentLaunched: false,
-  stateMetaExperiment: "phase 1",
+  stateMetaExperiment: 'phase 1',
   currentId: 1,
-  currentFlagIA: "non_vu",
+  currentFlagIA: 'non_vu',
   currentName: 'Initial Name',
   nextId: 2,
-  questionInterferente: "",
-  nextQuestionInterferente: "",
+  questionInterferente: '',
+  nextQuestionInterferente: '',
 };
 
 // Feature Selector
 export const selectAppState = createFeatureSelector<AppState>('app');
 
 // Selectors
-export const selectCurrentId = createSelector(selectAppState, (state) => state.currentId);
+export const selectCurrentId = createSelector(
+  selectAppState,
+  (state) => state.currentId
+);
 
-export const selectNextId = createSelector(selectAppState, (state) => state.nextId);
+export const selectNextId = createSelector(
+  selectAppState,
+  (state) => state.nextId
+);
 
-export const selectIsExperimentLaunched = createSelector(selectAppState, (state) => state.isExperimentLaunched);
+export const selectIsExperimentLaunched = createSelector(
+  selectAppState,
+  (state) => state.isExperimentLaunched
+);
 
-export const selectQuestionInterferente = createSelector(selectAppState, (state) => state.questionInterferente);
+export const selectQuestionInterferente = createSelector(
+  selectAppState,
+  (state) => state.questionInterferente
+);
 
-export const selectFlagIA = createSelector(selectAppState, (state) => state.currentFlagIA);
+export const selectFlagIA = createSelector(
+  selectAppState,
+  (state) => state.currentFlagIA
+);
 
-export const selectStateMetaExperiment = createSelector(selectAppState, (state) => state.stateMetaExperiment);
+export const selectStateMetaExperiment = createSelector(
+  selectAppState,
+  (state) => state.stateMetaExperiment
+);

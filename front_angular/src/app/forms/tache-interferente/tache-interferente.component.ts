@@ -9,9 +9,9 @@ import { AppState, selectQuestionInterferente } from 'src/app/@store/app.state';
 @Component({
   selector: 'app-tache-interferente',
   templateUrl: './tache-interferente.component.html',
-  styleUrls: ['./tache-interferente.component.scss']
+  styleUrls: ['./tache-interferente.component.scss'],
 })
-export class TacheInterferenteComponent implements OnInit{
+export class TacheInterferenteComponent implements OnInit {
   questionForm: FormGroup;
   questionInterferente!: string;
 
@@ -20,16 +20,16 @@ export class TacheInterferenteComponent implements OnInit{
     private fb: FormBuilder,
     private store: Store<AppState>,
     private renderer: Renderer2,
-    private elementRef: ElementRef,
-    ) {
-      this.questionForm = this.fb.group({
-        answer: ['', [Validators.required, this.isIntegerValidator]]
-      })
-      this.store.select(selectQuestionInterferente)
-        .subscribe(questionInterferente => {
-          this.questionInterferente = questionInterferente
-        });
-
+    private elementRef: ElementRef
+  ) {
+    this.questionForm = this.fb.group({
+      answer: ['', [Validators.required, this.isIntegerValidator]],
+    });
+    this.store
+      .select(selectQuestionInterferente)
+      .subscribe((questionInterferente) => {
+        this.questionInterferente = questionInterferente;
+      });
   }
 
   ngOnInit(): void {
@@ -37,11 +37,15 @@ export class TacheInterferenteComponent implements OnInit{
   }
 
   setFocus() {
-    this.renderer.selectRootElement(this.elementRef.nativeElement.querySelector('input')).focus();
+    this.renderer
+      .selectRootElement(this.elementRef.nativeElement.querySelector('input'))
+      .focus();
   }
 
   isIntegerValidator(control: any) {
-    return Number.isInteger(Number(control.value)) ? null : {notAnInteger : true};
+    return Number.isInteger(Number(control.value))
+      ? null
+      : { notAnInteger: true };
   }
 
   submitForm() {
@@ -58,7 +62,6 @@ export class TacheInterferenteComponent implements OnInit{
   onBlur() {
     // Function to be called when the input field loses focus
     console.log('Input field blurred');
-
   }
 
   goBackExperiment(): void {

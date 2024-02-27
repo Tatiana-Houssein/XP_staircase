@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Stimulus } from '../stimulus.model';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StimulusService {
+  url: string = 'http://localhost:5000';
 
-  url: string = 'http://localhost:5000'
-
-  constructor(private httpClient: HttpClient ) {}
+  constructor(private httpClient: HttpClient) {}
 
   getFirstStimulus(): Observable<any> {
     const token = this.httpClient.get<Stimulus>(`${this.url}/first-stimulus`);
@@ -17,8 +16,10 @@ export class StimulusService {
   }
 
   sendSubjectAnswer(dejaVu: boolean): Observable<any> {
-    const stimulus = this.httpClient.post<boolean>(`${this.url}/next-stimulus`, dejaVu);
+    const stimulus = this.httpClient.post<boolean>(
+      `${this.url}/next-stimulus`,
+      dejaVu
+    );
     return stimulus;
   }
-
 }

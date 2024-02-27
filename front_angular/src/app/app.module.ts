@@ -23,21 +23,18 @@ import { InfoSecondTaskComponent } from './forms/info-second-task/info-second-ta
     TacheInterferenteComponent,
     DespairComponent,
     UserInfoComponent,
-    InfoSecondTaskComponent
+    InfoSecondTaskComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     NgOptimizedImage,
-    StoreModule.forRoot(
-      { app: appReducer },
-      {}
-    ), // 'app' is the key for your reducer
+    StoreModule.forRoot({ app: appReducer }, {}), // 'app' is the key for your reducer
     EffectsModule.forRoot([AppEffects]),
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

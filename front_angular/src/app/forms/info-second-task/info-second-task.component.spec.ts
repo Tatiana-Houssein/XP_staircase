@@ -8,7 +8,7 @@ describe('InfoSecondTaskComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [InfoSecondTaskComponent]
+      declarations: [InfoSecondTaskComponent],
     });
     fixture = TestBed.createComponent(InfoSecondTaskComponent);
     component = fixture.componentInstance;

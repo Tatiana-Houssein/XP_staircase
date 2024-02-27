@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Adjust this if necessary */
+  height: 80vh; /* Adjust this if necessary */
 }
 
 .centered-image {
@@ -26,11 +26,13 @@
 }
 
 .vu-par-ia {
-  background-color: rgba(lightgreen, 0.4);
-  color: darkgreen;
+  border: 20px solid #009614;
 }
 
-.non-vu-par-ia{
-  background-color: rgba(pink, 0.4);
-  color: darkred;
+.non-vu-par-ia {
+  border: 20px solid #940000;
+}
+
+.pas-de-flag-ia {
+  border: 20px solid #ffffff;
 }
