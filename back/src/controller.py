@@ -4,6 +4,7 @@ from typing import Any
 from back.config import PICKEL_PATH
 from back.src.enum_constantes import ReponseSujet
 from back.src.ia import get_ia_flag
+from back.src.io import save_result
 from back.src.meta_experiment import MetaExperiment
 from back.src.tache_interferente import question_tache_interferente
 
@@ -26,6 +27,7 @@ def load_experiment() -> MetaExperiment:
 def call_back_next_stimulus() -> dict[str, Any]:
     meta_experiment = load_experiment()
     if meta_experiment.experiment.guess_next_stimulus_id() == -1:
+        save_result(meta_experiment.experiment.liste_resultat)
         meta_experiment.update_meta_experiment_state()
         print(meta_experiment.tableau_proportion)
     meta_experiment.experiment.update_current_stimulus()
