@@ -5,7 +5,7 @@ export const increment = createAction('[App] Increment');
 
 export const userRespondToStimulus = createAction(
   'User respond to stimulus',
-  props<{ responseToStimulus: boolean }>()
+  props<{ responseToStimulus: number }>()
 );
 
 export const frontReceiveBackAnswer = createAction(

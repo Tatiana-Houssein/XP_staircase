@@ -16,28 +16,53 @@
 
   <div class="button-container">
     <button
-      (click)="jamaisVu()"
+      (click)="userClickButton(1)"
       [disabled]="buttonsDisabled"
       class="change-button"
     >
-      Jamais VU
+      1
+    </button>
+
+    <button
+      (click)="userClickButton(2)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      2
+    </button>
+
+    <button
+      (click)="userClickButton(3)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      3
     </button>
     <button
-      (click)="dejaVu()"
+      (click)="userClickButton(4)"
       [disabled]="buttonsDisabled"
       class="change-button"
     >
-      Déjà VU
+      4
     </button>
     <button
-      (click)="secondButtonClick()"
+      (click)="userClickButton(5)"
       [disabled]="buttonsDisabled"
       class="change-button"
     >
-      Second Button
+      5
+    </button>
+    <button
+      (click)="userClickButton(6)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      6
     </button>
     <!-- <button (click)="goToSecondPage()" class="change-button">Go to Second Page</button>
     <button (click)="incrementTest()" class="change-button">Incr</button> -->
     <!-- <p>{{ flagIA }}</p> -->
   </div>
+
+  <img [src]="'assets/echelle.png'" alt="Image" class="echelle" />
 </div>

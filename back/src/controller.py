@@ -51,8 +51,10 @@ def call_back_next_stimulus() -> dict[str, Any]:
     }
 
 
-def call_back_answer(deja_vu: bool) -> None:  # noqa: FBT001
-    answer = ReponseSujet.vu if deja_vu else ReponseSujet.non_vu
+def call_back_answer(chosen_number: int) -> None:
+    answer = ReponseSujet.vu if chosen_number >= 4 else ReponseSujet.non_vu  # noqa: PLR2004
     meta_experiment = load_experiment()
-    meta_experiment.experiment.traitement_reponse_sujet(answer)
+    meta_experiment.experiment.traitement_reponse_sujet(
+        answer, nombre_sujet=chosen_number
+    )
     save_experiment(meta_experiment)

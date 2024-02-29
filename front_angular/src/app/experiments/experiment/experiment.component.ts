@@ -69,13 +69,9 @@ export class ExperimentComponent implements OnInit {
     this.displayImageForLimitedTime(1000);
   }
 
-  incrementTest() {
-    this.store.dispatch(increment());
-  }
-
-  sendUserAnswerToBack(userAnswer: boolean) {
+  sendUserAnswerToBack(chosenNumber: number) {
     this.store.dispatch(
-      userRespondToStimulus({ responseToStimulus: userAnswer })
+      userRespondToStimulus({ responseToStimulus: chosenNumber })
     );
   }
 
@@ -91,17 +87,8 @@ export class ExperimentComponent implements OnInit {
     );
   }
 
-  jamaisVu() {
-    this.sendUserAnswerToBack(false);
-    if (this.nextImageId === -1) {
-      this.router.navigate(['/info-second-task']);
-    } else {
-      this.router.navigate(['/calcul-mental']);
-    }
-  }
-
-  dejaVu() {
-    this.sendUserAnswerToBack(true);
+  userClickButton(chosenNumber: number) {
+    this.sendUserAnswerToBack(chosenNumber);
     if (this.nextImageId === -1) {
       this.router.navigate(['/info-second-task']);
     } else {
@@ -112,51 +99,15 @@ export class ExperimentComponent implements OnInit {
   private displayImageForLimitedTime(timeDisplay: number): void {
     // Set opacity to 1 for display
     this.imageOpacity = 1;
+    this.buttonsDisabled = true;
 
     // After 1 second, reset the opacity
     setTimeout(() => {
       // Ensure that Angular change detection is triggered within NgZone
       this.ngZone.run(() => {
         this.imageOpacity = 0;
+        this.buttonsDisabled = false;
       });
     }, timeDisplay);
-  }
-
-  secondButtonClick(): void {
-    // Disable the buttons
-    this.buttonsDisabled = true;
-
-    // Immediately reduce the opacity
-    this.imageOpacity = 0;
-
-    // this.currentImageId++;
-    // this.incrementTest();
-    this.sendUserAnswerToBack(true);
-
-    // Preload the next image
-    this.preloadNextImage();
-
-    // After a short delay, enable the buttons and update the image
-    setTimeout(() => {
-      // Increment the image ID again after the delay
-      // this.currentImageUrl = this.imageService.getImageUrl(this.currentImageId);
-
-      // After 1 second, reset the opacity and enable the buttons
-      setTimeout(() => {
-        this.imageOpacity = 1;
-        this.buttonsDisabled = false;
-
-        // Reset the image after 1 second
-        setTimeout(() => {
-          this.imageOpacity = 0;
-        }, 1000);
-      }, 1000);
-    }, 200);
-  }
-
-  goToSecondPage(): void {
-    // this.incrementTest();
-    this.sendUserAnswerToBack(true);
-    this.router.navigate(['/calcul-mental']);
   }
 }

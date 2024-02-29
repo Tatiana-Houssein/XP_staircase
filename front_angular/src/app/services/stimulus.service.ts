@@ -15,10 +15,10 @@ export class StimulusService {
     return token;
   }
 
-  sendSubjectAnswer(dejaVu: boolean): Observable<any> {
+  sendSubjectAnswer(chosenNumber: number): Observable<any> {
     const stimulus = this.httpClient.post<boolean>(
       `${this.url}/next-stimulus`,
-      dejaVu
+      chosenNumber
     );
     return stimulus;
   }
