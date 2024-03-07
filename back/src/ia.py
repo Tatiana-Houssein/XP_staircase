@@ -40,34 +40,36 @@ class TableCardinalResultExperiment:
 
     def transfert_ommissions_to_fausses_alarmes(self) -> TableCardinalResultExperiment:
         transferred_ommissions = max(0, self.ommissions - 1)
+        new_fausses_alarmes = max(1, self.fausses_alarmes + transferred_ommissions)
         return TableCardinalResultExperiment(
             1,
             self.detections_correctes,
             self.rejets_corrects,
-            self.fausses_alarmes + transferred_ommissions,
+            new_fausses_alarmes,
         )
 
     def transfert_fausses_alarmes_to_ommissions(self) -> TableCardinalResultExperiment:
         transferred_fausses_alarmes = max(0, self.fausses_alarmes - 1)
+        new_ommissions = max(1, self.ommissions + transferred_fausses_alarmes)
         return TableCardinalResultExperiment(
-            self.ommissions + transferred_fausses_alarmes,
+            new_ommissions,
             self.detections_correctes,
             self.rejets_corrects,
             1,
         )
 
     def get_corresponding_tableau_proportion(self) -> TableProportionResultExperiment:
-        total = (
-            self.ommissions
-            + self.detections_correctes
-            + self.rejets_corrects
-            + self.fausses_alarmes
-        )
+        omi = max(self.ommissions, 1)
+        fa = max(self.fausses_alarmes, 1)
+        dc = max(self.detections_correctes, 1)
+        rc = max(self.rejets_corrects, 1)
+
+        total = omi + dc + rc + fa
         return TableProportionResultExperiment(
-            self.ommissions / total,
-            self.detections_correctes / total,
-            self.rejets_corrects / total,
-            self.fausses_alarmes / total,
+            omi / total,
+            dc / total,
+            rc / total,
+            fa / total,
         )
 
 

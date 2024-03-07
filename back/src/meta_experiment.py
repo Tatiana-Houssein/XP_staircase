@@ -43,7 +43,7 @@ def extract_table_cardinaux_from_list_result(
         else:
             fausse_alarme += 1
     return TableCardinalResultExperiment(
-        ommission, detection_correct, rejet_correct, fausse_alarme
+        max(1, ommission), detection_correct, rejet_correct, max(1, fausse_alarme)
     )
 
 
@@ -72,6 +72,11 @@ class MetaExperiment:
             tableau_cardinaux = extract_table_cardinaux_from_list_result(
                 self.experiment.liste_resultat
             )
+            print(f"card reel {tableau_cardinaux}")
+            tableau_prop_ini = tableau_cardinaux.get_corresponding_tableau_proportion()
+            print(f"prop ini {tableau_prop_ini}")
+            d_prime = tableau_prop_ini.d_prime
+            print(f"d' ini {d_prime}")
             if self.strategy_ia == StrategyIA.sans_fausses_alarmes:
                 tableau_cardinaux = extract_table_cardinaux_from_list_result(
                     self.experiment.liste_resultat
@@ -80,8 +85,14 @@ class MetaExperiment:
                 tableau_cardinaux = extract_table_cardinaux_from_list_result(
                     self.experiment.liste_resultat
                 ).transfert_ommissions_to_fausses_alarmes()
+            print(f"card transfert {tableau_cardinaux}")
+            tableau_prop_tran = tableau_cardinaux.get_corresponding_tableau_proportion()
+            print(f"prop apres tran avant fit {tableau_prop_tran}")
+            print(f"d' tran {tableau_prop_tran.d_prime}")
             self.tableau_proportion = (
-                tableau_cardinaux.get_corresponding_tableau_proportion()
+                tableau_prop_tran.get_tableau_fitting_given_d_prime(d_prime)
             )
+            print(f"prop fitté {self.tableau_proportion}")
+            print(f"d' fité {self.tableau_proportion.d_prime}")
             self.experiment = self.initialisation_new_experiment()
             print(self.experiment.guess_next_stimulus_id())
