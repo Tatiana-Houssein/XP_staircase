@@ -21,12 +21,17 @@ def get_next_number_for_writing_csv() -> int:
     return next_number
 
 
-def save_result(liste_resultat: list[ResultExperiment]) -> None:
+def save_result(
+    liste_resultat: list[ResultExperiment],
+    root_directory: str = "data",
+    csv_file_name: str = "automatic,",
+) -> None:
     """Convertis liste_resultat en dataframe puis exporte en CSV.
 
     Args:
         liste_resultat (list[Resultat]):
     """
+    print(f"root: {root_directory}")
     # sauvegarde de la liste des résultats
     df_result = pd.DataFrame(
         liste_resultat,
@@ -41,8 +46,12 @@ def save_result(liste_resultat: list[ResultExperiment]) -> None:
             "nombre_sujet",
         ],
     )
-    next_csv_number = get_next_number_for_writing_csv() + 1
-    csv_path = f"data/results_{next_csv_number}.csv"
+    if csv_file_name == "automatic":
+        next_csv_number = get_next_number_for_writing_csv() + 1
+        csv_path = f"{root_directory}/results_{next_csv_number}.csv"
+    else:
+        csv_path = f"{root_directory}/{csv_file_name}.csv"
+    print(f"csv_path: {csv_path}")
     df_result.to_csv(csv_path, index=False)
 
 

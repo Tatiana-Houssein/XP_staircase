@@ -27,7 +27,11 @@ def load_experiment() -> MetaExperiment:
 def call_back_next_stimulus() -> dict[str, Any]:
     meta_experiment = load_experiment()
     if meta_experiment.experiment.guess_next_stimulus_id() == -1:
-        save_result(meta_experiment.experiment.liste_resultat)
+        save_result(
+            liste_resultat=meta_experiment.experiment.liste_resultat,
+            root_directory=f"data/{meta_experiment.date}",
+            csv_file_name=str(meta_experiment.state),
+        )
         meta_experiment.update_meta_experiment_state()
         print(meta_experiment.tableau_proportion)
     meta_experiment.experiment.update_current_stimulus()

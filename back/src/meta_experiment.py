@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 from back.src.constantes import (
     DICT_STATE_META_TO_STRATEGY_IA,
     LAG_INITIAL,
@@ -49,6 +52,7 @@ def extract_table_cardinaux_from_list_result(
 
 class MetaExperiment:
     def __init__(self) -> None:
+        self.date = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")  # noqa: DTZ005
         self.state: StateMetaExperiment = StateMetaExperiment.first
         self.dict_state_list_stimuli = get_dict_of_list_stimuli_for_meta_experiment()
         self.experiment: Experiment = self.initialisation_new_experiment()
@@ -56,6 +60,11 @@ class MetaExperiment:
             TABLEAU_PROPORTION_SUR
         )
         self.strategy_ia: StrategyIA = StrategyIA.sans_ia
+        self.setup_directories()
+
+    def setup_directories(self) -> None:
+        print(self.date)
+        os.makedirs(f"data/{self.date}")  # noqa: PTH103
 
     def initialisation_new_experiment(self) -> Experiment:
         return Experiment(
