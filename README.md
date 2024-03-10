@@ -1,8 +1,7 @@
 # XP_staircase
 
 Script d'un protocole staircase en reconnaissance de visages
-Pour lancer le front dans le navigateur, ouvri un git bash à la racine du projet sur VSCode puis taper
- * ```python -m streamlit run front_streamlit/streamlite_front.py```  (Ctrl C pour quitter)
+Pour lancer le front dans le navigateur, ouvrir un git bash à la racine du projet sur VSCode puis taper
  * ```python -m flask --app back.api.app run```
  * Depuis le front (```cd front_angular```): ```ng serve```
 
