@@ -37,20 +37,19 @@ def call_back_next_stimulus() -> dict[str, Any]:
         print(meta_experiment.tableau_proportion)
     if meta_experiment.state != StateMetaExperiment.finish:
         meta_experiment.experiment.update_current_stimulus()
-    save_experiment(meta_experiment)
-    flag_ia = get_ia_flag(
+    meta_experiment.current_flag_ia = get_ia_flag(
         tableau_proportion_resultat_experience=meta_experiment.tableau_proportion,
         status_stimulus=meta_experiment.experiment.current_stimulus.statut,
         strategy_ia=meta_experiment.strategy_ia,
     )
-
+    save_experiment(meta_experiment)
     print(
         f"CURRENT: {meta_experiment.experiment.current_stimulus.id}, NEXT: {meta_experiment.experiment.guess_next_stimulus_id()}"  # noqa: E501
     )
     return {
         "metaExperimentState": meta_experiment.state,
         "currentId": meta_experiment.experiment.current_stimulus.id,
-        "currentIaDisplay": flag_ia,
+        "currentIaDisplay": meta_experiment.current_flag_ia,
         "nextId": meta_experiment.experiment.guess_next_stimulus_id(),
         "nextIaDisplay": "non",
         "questionInterferente": question_tache_interferente(),
@@ -61,6 +60,8 @@ def call_back_answer(chosen_number: int) -> None:
     answer = ReponseSujet.vu if chosen_number >= 4 else ReponseSujet.non_vu  # noqa: PLR2004
     meta_experiment = load_experiment()
     meta_experiment.experiment.traitement_reponse_sujet(
-        answer, nombre_sujet=chosen_number
+        answer,
+        nombre_sujet=chosen_number,
+        flag_ia=meta_experiment.current_flag_ia,
     )
     save_experiment(meta_experiment)

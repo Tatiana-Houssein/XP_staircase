@@ -6,7 +6,7 @@ from back.src.constantes import (
     LAG_INITIAL,
     TABLEAU_PROPORTION_SUR,
 )
-from back.src.enum_constantes import StateMetaExperiment, StrategyIA, TypeErreur
+from back.src.enum_constantes import FlagIA, StateMetaExperiment, StrategyIA, TypeErreur
 from back.src.experiment import (
     Experiment,
     get_dict_of_list_stimuli_for_meta_experiment,
@@ -60,6 +60,7 @@ class MetaExperiment:
             TABLEAU_PROPORTION_SUR
         )
         self.strategy_ia: StrategyIA = StrategyIA.sans_ia
+        self.current_flag_ia = FlagIA.pas_de_flag
         self.setup_directories()
 
     def setup_directories(self) -> None:

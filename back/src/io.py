@@ -44,6 +44,7 @@ def save_result(
             "reponse_sujet",
             "type_erreur_tds",
             "nombre_sujet",
+            "flag_ia",
         ],
     )
     if csv_file_name == "automatic":

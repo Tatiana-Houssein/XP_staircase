@@ -11,3 +11,4 @@ class ResultExperiment:
     reponse_sujet: str
     type_erreur_tds: str
     nombre_sujet: int
+    flag_ia: str

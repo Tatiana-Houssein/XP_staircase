@@ -8,6 +8,7 @@ from back.src.constantes import (
     TAILLE_POOL_NON_VU,
 )
 from back.src.enum_constantes import (
+    FlagIA,
     ReponseSujet,
     StateMetaExperiment,
     StatusStimulus,
@@ -151,6 +152,7 @@ class Experiment:
         self,
         reponse_du_sujet: str,
         nombre_sujet: int = -1,
+        flag_ia: str = FlagIA.pas_de_flag,
     ) -> None:
         """
         Le lag global est adapté à la bonne ou mauvaise réponse du sujet au stimulus
@@ -185,6 +187,7 @@ class Experiment:
                 )
             ),
             nombre_sujet=nombre_sujet,
+            flag_ia=flag_ia,
         )
         self.liste_resultat.append(resultat)
 
