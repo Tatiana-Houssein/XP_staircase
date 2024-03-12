@@ -16,7 +16,7 @@ export class UserInfoComponent {
     this.store.dispatch(loadExperimentComponent());
   }
 
-  sendToExperiment(): void {
-    this.router.navigate(['/experiment']);
+  sendToFormBeginning(): void {
+    this.router.navigate(['/form-beginning']);
   }
 }

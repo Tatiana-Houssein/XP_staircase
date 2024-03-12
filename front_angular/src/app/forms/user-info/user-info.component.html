@@ -1,54 +1,32 @@
 <app-despair></app-despair>
 
-<p>Bienvenue dans cette experience. <br />
+<p>
+  Bienvenue dans cette experience. <br />
 
-<br />
+  <br />
 
-Cette expérience va se dérouler en 3 étapes. <br />
+  Cette expérience va se dérouler en 3 étapes. <br />
 
-<br />
+  <br />
 
-Dans chacune de ces étapes, plusieurs visages vous seront présentés. A chaque fois qu'un visage apparaît,
-vous devrez indiquer si vous avez déjà vu ce visage auparavant. Vous devrez aussi indiquer le niveau de
-confiance que vous avez en votre réponse. <br />
+  Dans chacune de ces étapes, plusieurs visages vous seront présentés. A chaque
+  fois qu'un visage apparaît, vous devrez indiquer si vous avez déjà vu ce
+  visage auparavant. Vous devrez aussi indiquer le niveau de confiance que vous
+  avez en votre réponse. <br />
 
-<br />
+  <br />
 
-En première étape, vous effectuez cette tâche seul. En deuxième et troisième étape, vous serez aidé par un
-algorithme qui indiquera si un visage a déjà été présenté (visage entouré de vert) ou non (visage entouré
-de rouge). <br />
+  En première étape, vous effectuez cette tâche seul. En deuxième et troisième
+  étape, vous serez aidé par un algorithme qui indiquera si un visage a déjà été
+  présenté (visage entouré de vert) ou non (visage entouré de rouge). <br />
 
-<br />
+  <br />
 
-L'expérience dure environ 10 minutes. N'hésitez pas à poser des questions à l'expérimentateur avant de
-commencer. A chaque étape, les consignes seront précisées. Vous commencerez par répondre à quelques
-questions. Si vous êtes prêt et consentez à participer
-à cette expérience, cliquez sur le bouton "OK pour l'expérience".
-
+  L'expérience dure environ 10 minutes. N'hésitez pas à poser des questions à
+  l'expérimentateur avant de commencer. A chaque étape, les consignes seront
+  précisées. Vous commencerez par répondre à quelques questions. Si vous êtes
+  prêt et consentez à participer à cette expérience, cliquez sur le bouton "OK
+  pour l'expérience".
 </p>
 
-<form action="process_form.php" method="POST">
-    <label for="age">Quel âge avez-vous ? :</label>
-    <input type="number" id="name" name="name" required><br><br>
-
-    <label for="genre">Quel est votre genre ? :</label>
-    <select id="subject" name="subject" required>
-        <option value="féminin">féminin</option>
-        <option value="masculin">masculin</option>
-        <option value="autre">autre</option>
-        <option value="je ne veux pas préciser">je ne veux pas préciser</option>
-    </select><br><br>
-
-    <label for="CSP">Dans quelle catégorie socio-professionnelle êtes vous? :</label>
-    <select id="subject" name="subject" required>
-        <option value="agriculteur exploitant">agriculteur exploitant</option>
-        <option value="commerçant, artisan ou chef d'entreprise">commerçant, artisan ou chef d'entreprise</option>
-        <option value="cadre ou profession intellectuelle supérieure">cadre ou profession intellectuelle supérieure</option>
-        <option value="profession intermédiaire">profession intermédiaire</option>
-        <option value="employé ou ouvrier">employé ou ouvrier</option>
-        <option value="étudiant">étudiant</option>
-    </select><br><br>
-
-</form>
-
-<button (click)="sendToExperiment()">OK pour l'experience</button>
+<button (click)="sendToFormBeginning()">OK pour l'experience</button>

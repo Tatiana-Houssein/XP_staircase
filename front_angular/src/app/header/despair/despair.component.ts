@@ -24,8 +24,4 @@ export class DespairComponent {
     this.nextId$ = store.select(selectNextId);
     this.isExperimentLaunched$ = this.store.select(selectIsExperimentLaunched);
   }
-
-  increment() {
-    this.store.dispatch(increment());
-  }
 }

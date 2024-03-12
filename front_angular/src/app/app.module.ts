@@ -15,6 +15,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserInfoComponent } from './forms/user-info/user-info.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InfoSecondTaskComponent } from './forms/info-second-task/info-second-task.component';
+import { InfoFirstTaskComponent } from './forms/info-first-task/info-first-task.component';
+import { InfoThirdTaskComponent } from './forms/info-third-task/info-third-task.component';
+import { FormBeginningComponent } from './forms/form-beginning/form-beginning.component';
+import { FormEndingComponent } from './forms/form-ending/form-ending.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +28,10 @@ import { InfoSecondTaskComponent } from './forms/info-second-task/info-second-ta
     DespairComponent,
     UserInfoComponent,
     InfoSecondTaskComponent,
+    InfoFirstTaskComponent,
+    InfoThirdTaskComponent,
+    FormBeginningComponent,
+    FormEndingComponent,
   ],
   imports: [
     BrowserModule,
