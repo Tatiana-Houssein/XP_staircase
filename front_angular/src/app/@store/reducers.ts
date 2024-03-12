@@ -17,7 +17,7 @@ export const appReducer = createReducer(
       console.log('RECEIVING BACK DATAS', backData),
       {
         ...state,
-        stateMetaExperiment: backData.stateMetaExperiment,
+        stateMetaExperiment: backData.metaExperimentState,
         currentId: backData.currentId,
         currentFlagIA: backData.currentIaDisplay,
         nextId: backData.nextId,

@@ -2,7 +2,7 @@ import pickle
 from typing import Any
 
 from back.config import PICKEL_PATH
-from back.src.enum_constantes import ReponseSujet
+from back.src.enum_constantes import ReponseSujet, StateMetaExperiment
 from back.src.ia import get_ia_flag
 from back.src.io import save_result
 from back.src.meta_experiment import MetaExperiment
@@ -32,9 +32,11 @@ def call_back_next_stimulus() -> dict[str, Any]:
             root_directory=f"data/{meta_experiment.date}",
             csv_file_name=str(meta_experiment.state),
         )
+
         meta_experiment.update_meta_experiment_state()
         print(meta_experiment.tableau_proportion)
-    meta_experiment.experiment.update_current_stimulus()
+    if meta_experiment.state != StateMetaExperiment.finish:
+        meta_experiment.experiment.update_current_stimulus()
     save_experiment(meta_experiment)
     flag_ia = get_ia_flag(
         tableau_proportion_resultat_experience=meta_experiment.tableau_proportion,

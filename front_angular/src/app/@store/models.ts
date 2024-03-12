@@ -1,5 +1,5 @@
 export interface BackDatas {
-  stateMetaExperiment: string;
+  metaExperimentState: string;
   currentId: number;
   // currentUrl: string;
   currentIaDisplay: string;

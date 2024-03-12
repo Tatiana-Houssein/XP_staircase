@@ -103,5 +103,6 @@ class MetaExperiment:
             )
             print(f"prop fitté {self.tableau_proportion}")
             print(f"d' fité {self.tableau_proportion.d_prime}")
-            self.experiment = self.initialisation_new_experiment()
-            print(self.experiment.guess_next_stimulus_id())
+            if self.state != StateMetaExperiment.finish:
+                self.experiment = self.initialisation_new_experiment()
+                print(self.experiment.guess_next_stimulus_id())

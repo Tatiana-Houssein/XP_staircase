@@ -88,10 +88,22 @@ export class ExperimentComponent implements OnInit {
   }
 
   userClickButton(chosenNumber: number) {
-    this.sendUserAnswerToBack(chosenNumber);
     if (this.nextImageId === -1) {
-      this.router.navigate(['/info-second-task']);
+      console.log(this.stateMetaExperiment);
+      if (this.stateMetaExperiment === 'phase 1') {
+        this.sendUserAnswerToBack(chosenNumber);
+        this.router.navigate(['/info-second-task']);
+      }
+      if (this.stateMetaExperiment === 'phase 2') {
+        this.sendUserAnswerToBack(chosenNumber);
+        this.router.navigate(['/info-third-task']);
+      }
+      if (this.stateMetaExperiment === 'phase 3') {
+        this.sendUserAnswerToBack(chosenNumber);
+        this.router.navigate(['/form-ending']);
+      }
     } else {
+      this.sendUserAnswerToBack(chosenNumber);
       this.router.navigate(['/calcul-mental']);
     }
   }
