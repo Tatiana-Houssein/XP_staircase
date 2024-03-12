@@ -17,18 +17,29 @@
   <label for="CSP"
     >Dans quelle catégorie socio-professionnelle êtes vous? :</label
   >
-  <select id="subject" name="subject" required>
-    <option value="agriculteur exploitant">agriculteur exploitant</option>
-    <option value="commerçant, artisan ou chef d'entreprise">
-      commerçant, artisan ou chef d'entreprise
-    </option>
-    <option value="cadre ou profession intellectuelle supérieure">
-      cadre ou profession intellectuelle supérieure
-    </option>
-    <option value="profession intermédiaire">profession intermédiaire</option>
-    <option value="employé ou ouvrier">employé ou ouvrier</option>
-    <option value="étudiant">étudiant</option></select
-  ><br /><br />
-</form> -->
+ -->
 
-<button (click)="sendToInfoFirstTask()">OK</button>
+<form [formGroup]="myForm" (ngSubmit)="sendToInfoFirstTask()">
+  <label>
+    Age:
+    <input type="text" formControlName="age" />
+  </label>
+  <br />
+  Genre :
+  <select formControlName="genre">
+    <option value="" disabled>Choisissez</option>
+    <option *ngFor="let genre of genres" [ngValue]="genre">
+      {{ genre }}
+    </option>
+  </select>
+  <br />
+  CSP :
+  <select formControlName="csp">
+    <option value="" disabled>Choose a CSP</option>
+    <option *ngFor="let csp of csps" [ngValue]="csp">
+      {{ csp }}
+    </option>
+  </select>
+  <br />
+  <button type="submit">Envoyer</button>
+</form>
