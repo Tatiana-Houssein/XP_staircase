@@ -1,15 +1,9 @@
-$marge: 140px;
-
-body {
-    font-size: 25px; // Augmente la taille de la police de base pour l'ensemble du document
-}
-
-
-p {
-    margin: $marge; // Ajoute une marge de la taille définie autour du paragraphe
-    text-align: justify;
-    font-size: 1.1rem;
-
+h1 {
+    font-size: 50px;
+    margin-top: 120px; // Marge en haut du titre
+    margin-bottom: 20px; // Marge en bas du titre
+    margin-left: 100px; // Marge à gauche du titre
+    margin-right: 10px; // Marge à droite du titre
 }
 
 button {
@@ -20,13 +14,16 @@ button {
     font-size: 1.2rem; // Utilisation de rem pour définir la taille de la police
 }
 
-body {
-    font-size: 25px; // Augmente la taille de la police de base pour l'ensemble du document
-}
+$marge: 200px;
 
-h1 {
-    margin-top: 150px; // Marge en haut du titre
-    margin-bottom: 20px; // Marge en bas du titre
-    margin-left: 100px; // Marge à gauche du titre
-    margin-right: 10px; // Marge à droite du titre
+p {
+    text-align: justify;
+    font-size: 1.3rem;
+    margin-top: 100px;
+    margin-bottom: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
+
+
+
 }

@@ -1,14 +1,15 @@
 $marge: 200px;
 
 body {
-    font-size: 25px; // Augmente la taille de la police de base pour l'ensemble du document
+    font-size: 40px; // Augmente la taille de la police de base pour l'ensemble du document
 }
 
 
 p {
     margin: $marge; // Ajoute une marge de la taille définie autour du paragraphe
     text-align: justify;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
+
 
 }
 
