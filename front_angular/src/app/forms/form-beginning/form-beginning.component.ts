@@ -15,10 +15,10 @@ export class FormBeginningComponent {
     'profession intermédiaire',
     'employé ou ouvrier',
     'étudiant',
-    'ya pas chômeur wesh ?',
+    'sans emploi',
   ];
 
-  genres = ['masquin', 'fémine', 'arbre', 'pas encore regardé sous ma culotte'];
+  genres = ['masculin', 'féminin', 'autre', 'je ne veux pas préciser'];
 
   ageControl = new FormControl('');
   genreControl = new FormControl('');

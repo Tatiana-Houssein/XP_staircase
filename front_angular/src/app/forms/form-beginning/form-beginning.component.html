@@ -1,4 +1,6 @@
-<p>form-beginning works!</p>
+<h1>Questionnaire</h1>
+
+<p></p>
 
 <!-- <form action="process_form.php" method="POST">
   <label for="age">Quel âge avez-vous ? :</label>
@@ -21,11 +23,13 @@
 
 <form [formGroup]="myForm" (ngSubmit)="sendToInfoFirstTask()">
   <label>
-    Age:
-    <input type="text" formControlName="age" />
+    Quel âge avez-vous ?
+    <input type="number" formControlName="age" />
   </label>
   <br />
-  Genre :
+  <br />
+
+  Quel est votre genre?
   <select formControlName="genre">
     <option value="" disabled>Choisissez</option>
     <option *ngFor="let genre of genres" [ngValue]="genre">
@@ -33,13 +37,17 @@
     </option>
   </select>
   <br />
-  CSP :
+  <br />
+
+  Quelle est votre catégorie socio-professionnelle ?
   <select formControlName="csp">
-    <option value="" disabled>Choose a CSP</option>
+    <option value="" disabled>Choisissez</option>
     <option *ngFor="let csp of csps" [ngValue]="csp">
       {{ csp }}
     </option>
   </select>
   <br />
-  <button type="submit">Envoyer</button>
+  <br />
+
+  <button type="submit">Continuer</button>
 </form>
