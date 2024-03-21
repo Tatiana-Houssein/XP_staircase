@@ -8,6 +8,11 @@ export const userRespondToStimulus = createAction(
   props<{ responseToStimulus: number }>()
 );
 
+export const userSendForm = createAction(
+  'User send form',
+  props<{ responseToStimulus: number }>()
+);
+
 export const frontReceiveBackAnswer = createAction(
   '[Source] Event',
   props<{ backData: BackDatas }>()

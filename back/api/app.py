@@ -5,6 +5,7 @@ from back.src.controller import (
     call_back_answer,
     call_back_next_stimulus,
     create_new_experiment,
+    get_dict_tache_interferente,
     save_form_data,
 )
 
@@ -36,6 +37,12 @@ def submit_form():  # noqa: ANN201
     save_form_data(form_data=form_data)
     print("Received form data:", form_data)
     return jsonify({"message": "Form submitted successfully"}), 200
+
+
+@app.route("/tache-interferente", methods=["GET"])
+def get_tache_interferente_parameters():  # noqa: ANN201
+    dict_tache_inter = get_dict_tache_interferente()
+    return jsonify(dict_tache_inter)
 
 
 if __name__ == "__main__":

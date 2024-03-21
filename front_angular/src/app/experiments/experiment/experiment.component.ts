@@ -17,6 +17,7 @@ import {
   startNewExperiment,
 } from '../../@store/actions';
 import { increment } from '../../@store/actions';
+import { StimulusService } from 'src/app/services/stimulus.service';
 
 @Component({
   selector: 'app-experiment',
@@ -33,16 +34,19 @@ export class ExperimentComponent implements OnInit {
   flagIA!: string;
   imageOpacity = 1; // Initial opacity
   buttonsDisabled = false; // Initial state
+  tacheInterferenteData!: any;
 
   constructor(
     private imageService: ImageService,
     private imagePreloadService: ImagePreloadService,
     private router: Router,
     private ngZone: NgZone,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private stimulusService: StimulusService
   ) {}
 
   ngOnInit(): void {
+    this.requestTacheInterferentData();
     this.store
       .select(selectIsExperimentLaunched)
       .subscribe((isExperimentLanched) => {
@@ -67,6 +71,18 @@ export class ExperimentComponent implements OnInit {
       });
     this.preloadNextImage();
     this.displayImageForLimitedTime(1000);
+  }
+
+  requestTacheInterferentData() {
+    this.stimulusService.requestTacheinterferente().subscribe(
+      (result) => {
+        console.log('TID', result);
+        this.tacheInterferenteData = result;
+      },
+      (error) => {
+        console.error('Error fetching TacheInterferenteData:', error);
+      }
+    );
   }
 
   sendUserAnswerToBack(chosenNumber: number) {

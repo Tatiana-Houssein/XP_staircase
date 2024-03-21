@@ -1,4 +1,5 @@
 import pickle
+from dataclasses import asdict
 from typing import Any
 
 from back.config import PICKEL_PATH
@@ -6,7 +7,10 @@ from back.src.enum_constantes import ReponseSujet, StateMetaExperiment
 from back.src.ia import get_ia_flag
 from back.src.io import load_form_data, save_form, save_result
 from back.src.meta_experiment import MetaExperiment
-from back.src.tache_interferente import question_tache_interferente
+from back.src.tache_interferente import (
+    create_tache_interferente_data,
+    question_tache_interferente,
+)
 
 
 def create_new_experiment() -> None:
@@ -80,3 +84,13 @@ def call_back_answer(chosen_number: int) -> None:
         flag_ia=meta_experiment.current_flag_ia,
     )
     save_experiment(meta_experiment)
+
+
+def get_dict_tache_interferente() -> dict[str, Any]:
+    """Return a dict of the tache_interfrente paramters
+
+    Returns:
+        _type_: _description_
+    """
+    tache_inter = create_tache_interferente_data()
+    return asdict(tache_inter)
