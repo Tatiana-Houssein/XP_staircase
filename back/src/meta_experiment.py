@@ -64,7 +64,7 @@ class MetaExperiment:
         self.setup_directories()
 
     def setup_directories(self) -> None:
-        print(self.date)
+        print(f"create data/{self.date} directory")
         os.makedirs(f"data/{self.date}")  # noqa: PTH103
 
     def initialisation_new_experiment(self) -> Experiment:

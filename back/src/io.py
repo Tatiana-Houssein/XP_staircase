@@ -1,6 +1,8 @@
 import os
+from typing import Any
 
 import pandas as pd
+import yaml
 
 from back.src.resultat import ResultExperiment
 
@@ -19,6 +21,27 @@ def get_next_number_for_writing_csv() -> int:
         if int(result.split(".")[0][8:]) > next_number:
             next_number = int(result.split(".")[0][8:])
     return next_number
+
+
+def load_form_data(yaml_path_file: str) -> dict:
+    """Load existing yaml file and return a dict. Empty if not exists.
+
+    Args:
+        yaml_path_file (str): _description_
+
+    Returns:
+        dict: _description_
+    """
+    if os.path.exists(yaml_path_file):  # noqa: PTH110
+        with open(yaml_path_file) as file:
+            return yaml.safe_load(file)
+    return {}
+
+
+def save_form(form_data: dict[str, Any], yaml_path_file: str) -> None:
+    """save a dict into a Yaml file."""
+    with open(yaml_path_file, "w") as file:
+        yaml.dump(form_data, file)
 
 
 def save_result(

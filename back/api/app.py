@@ -5,6 +5,7 @@ from back.src.controller import (
     call_back_answer,
     call_back_next_stimulus,
     create_new_experiment,
+    save_form_data,
 )
 
 app = Flask(__name__)
@@ -26,6 +27,15 @@ def next_stimulus():  # noqa: ANN201
     dict_next_stimulus = call_back_next_stimulus()
 
     return jsonify(dict_next_stimulus)
+
+
+@app.route("/submit", methods=["POST"])
+def submit_form():  # noqa: ANN201
+    form_data = request.json
+    # Process form data here
+    save_form_data(form_data=form_data)
+    print("Received form data:", form_data)
+    return jsonify({"message": "Form submitted successfully"}), 200
 
 
 if __name__ == "__main__":

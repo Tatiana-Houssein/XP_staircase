@@ -4,7 +4,7 @@ from typing import Any
 from back.config import PICKEL_PATH
 from back.src.enum_constantes import ReponseSujet, StateMetaExperiment
 from back.src.ia import get_ia_flag
-from back.src.io import save_result
+from back.src.io import load_form_data, save_form, save_result
 from back.src.meta_experiment import MetaExperiment
 from back.src.tache_interferente import question_tache_interferente
 
@@ -22,6 +22,21 @@ def save_experiment(meta_experiement: MetaExperiment) -> None:
 def load_experiment() -> MetaExperiment:
     with open(PICKEL_PATH, "rb") as f:
         return pickle.load(f)  # noqa: S301
+
+
+def save_form_data(
+    form_data: dict[str, Any],
+) -> None:
+    meta_experiment = load_experiment()
+    yaml_path_file = f"data/{meta_experiment.date}.yaml"
+    # Load existing form data
+    existing_data = load_form_data(yaml_path_file=yaml_path_file)
+
+    # Merge new form data with existing data
+    existing_data.update(form_data)
+
+    # Save merged data to YAML file
+    save_form(form_data=existing_data, yaml_path_file=yaml_path_file)
 
 
 def call_back_next_stimulus() -> dict[str, Any]:
