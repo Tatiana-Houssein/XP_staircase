@@ -32,7 +32,7 @@ def save_form_data(
     form_data: dict[str, Any],
 ) -> None:
     meta_experiment = load_experiment()
-    yaml_path_file = f"data/{meta_experiment.date}.yaml"
+    yaml_path_file = f"data/{meta_experiment.date}/form.yaml"
     # Load existing form data
     existing_data = load_form_data(yaml_path_file=yaml_path_file)
 

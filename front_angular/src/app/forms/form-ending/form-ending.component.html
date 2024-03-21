@@ -1,24 +1,50 @@
 <h1>Questionnaire post-expérimental</h1>
 
-<form action="/soumettre_questionnaire" method="get">
+<form [formGroup]="form" (ngSubmit)="finishExperiment()">
+  <label><b>Avez-vous perçu une différence entre les 2 algorithmes ?</b></label>
+  <br />
   <label>
-      <b>Avez-vous perçu une différence entre les 2 algorithmes ?</b><br>
-      <input type="radio" name="q1" value="oui"> Oui<br>
-      <input type="radio" name="q1" value="non"> Non<br>
-  </label><br><br>
+    <input type="radio" formControlName="question1" value="yes" />
+    Oui </label
+  ><br />
+  <label>
+    <input type="radio" formControlName="question1" value="no" />
+    Non </label
+  ><br />
+  <br /><br />
+
+  <label><b>Quel algorithme vous inspirait le plus confiance ?</b></label>
+  <br />
+  <label>
+    <input type="radio" formControlName="question2" value="premier" /> Le
+    premier
+  </label>
+  <br />
+  <label>
+    <input type="radio" formControlName="question2" value="deuxieme" /> Le
+    deuxième
+  </label>
+  <br />
+  <label>
+    <input type="radio" formControlName="question2" value="meme_manier" /> Pas
+    de différence
+  </label>
+  <br />
+  <br /><br />
 
   <label>
-      <b>Quel algorithme vous inspirait le plus confiance ?</b><br>
-      <input type="radio" name="q2" value="premier"> Le premier<br>
-      <input type="radio" name="q2" value="deuxieme"> Le deuxième<br>
-      <input type="radio" name="q2" value="meme_manier"> Pas de différence<br>
-  </label><br><br>
+    <b
+      >Pensez-vous que vos performances se sont améliorées grâce à l'un de ces
+      algorithmes ?
+    </b> </label
+  ><br />
+  <label
+    ><input type="radio" formControlName="question3" value="oui" /> Oui</label
+  ><br />
+  <label
+    ><input type="radio" formControlName="question3" value="non" /> Non</label
+  ><br />
+  <br /><br />
 
-  <label>
-    <b>Pensez-vous que vos performances se sont améliorées grâce à l'un de ces algorithmes ?</b><br>
-    <input type="radio" name="q2" value="oui"> Oui<br>
-    <input type="radio" name="q2" value="non"> Non<br>
-</label><br><br>
-
-  <input type="submit" value="Terminer l'expérience">
+  <input type="submit" value="Terminer l'expérience" />
 </form>
