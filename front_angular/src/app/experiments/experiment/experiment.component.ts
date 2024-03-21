@@ -15,6 +15,7 @@ import {
   loadExperimentComponent,
   userRespondToStimulus,
   startNewExperiment,
+  newTacheInterferenteData,
 } from '../../@store/actions';
 import { increment } from '../../@store/actions';
 import { StimulusService } from 'src/app/services/stimulus.service';
@@ -52,6 +53,7 @@ export class ExperimentComponent implements OnInit {
       .subscribe((isExperimentLanched) => {
         this.isExperimentLaunched = isExperimentLanched;
       });
+
     this.store.dispatch(loadExperimentComponent());
     this.store.select(selectCurrentId).subscribe((currentId) => {
       (this.currentImageId = currentId),
@@ -78,6 +80,9 @@ export class ExperimentComponent implements OnInit {
       (result) => {
         console.log('TID', result);
         this.tacheInterferenteData = result;
+        this.store.dispatch(
+          newTacheInterferenteData({ tacheInterferenteData: result })
+        );
       },
       (error) => {
         console.error('Error fetching TacheInterferenteData:', error);

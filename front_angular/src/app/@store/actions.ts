@@ -8,9 +8,9 @@ export const userRespondToStimulus = createAction(
   props<{ responseToStimulus: number }>()
 );
 
-export const userSendForm = createAction(
-  'User send form',
-  props<{ responseToStimulus: number }>()
+export const newTacheInterferenteData = createAction(
+  'New Tache Interferente Data',
+  props<{ tacheInterferenteData: any }>()
 );
 
 export const frontReceiveBackAnswer = createAction(

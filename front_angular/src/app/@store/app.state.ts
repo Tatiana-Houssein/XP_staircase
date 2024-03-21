@@ -8,7 +8,7 @@ export interface AppState {
   currentName: string;
   nextId: number;
   questionInterferente: string;
-  nextQuestionInterferente: string;
+  expectedResultTacheInterferente: number;
 }
 
 export const initialState: AppState = {
@@ -19,7 +19,7 @@ export const initialState: AppState = {
   currentName: 'Initial Name',
   nextId: 2,
   questionInterferente: '',
-  nextQuestionInterferente: '',
+  expectedResultTacheInterferente: 0,
 };
 
 // Feature Selector
@@ -44,6 +44,11 @@ export const selectIsExperimentLaunched = createSelector(
 export const selectQuestionInterferente = createSelector(
   selectAppState,
   (state) => state.questionInterferente
+);
+
+export const selectResultTacheInterferente = createSelector(
+  selectAppState,
+  (state) => state.expectedResultTacheInterferente
 );
 
 export const selectFlagIA = createSelector(

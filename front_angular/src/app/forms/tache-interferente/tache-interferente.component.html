@@ -20,11 +20,11 @@
       </div>
     </div>
     <div class="button-container">
-      <button type="submit" [disabled]="questionForm.invalid">
-        Envoyer la réponse
-      </button>
+      <button type="submit">Envoyer la réponse</button>
     </div>
   </form>
+
+  <div class="bad-result" *ngIf="wrongAnswer">Mauvais résultat</div>
 </div>
 
 <!-- <div>

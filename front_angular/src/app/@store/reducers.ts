@@ -1,5 +1,5 @@
 import { initialState } from './app.state';
-import { frontReceiveBackAnswer } from './actions';
+import { frontReceiveBackAnswer, newTacheInterferenteData } from './actions';
 import { increment } from './actions';
 
 import { createReducer, on } from '@ngrx/store';
@@ -21,9 +21,18 @@ export const appReducer = createReducer(
         currentId: backData.currentId,
         currentFlagIA: backData.currentIaDisplay,
         nextId: backData.nextId,
-        questionInterferente: state.nextQuestionInterferente,
-        nextQuestionInterferente: backData.questionInterferente,
         isExperimentLaunched: true,
+      }
+    )
+  ),
+  on(
+    newTacheInterferenteData,
+    (state, { tacheInterferenteData }) => (
+      console.log('New Tache Interferente Datas', tacheInterferenteData),
+      {
+        ...state,
+        questionInterferente: tacheInterferenteData['question'],
+        expectedResultTacheInterferente: tacheInterferenteData['result'],
       }
     )
   )
