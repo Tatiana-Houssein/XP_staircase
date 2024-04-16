@@ -1,0 +1,53 @@
+<h1>Questionnaire</h1>
+
+<p></p>
+
+<!-- <form action="process_form.php" method="POST">
+  <label for="age">Quel âge avez-vous ? :</label>
+  <input type="number" id="name" name="name" required /><br /><br />
+
+  <label for="genre">Quel est votre genre ? :</label>
+  <select id="subject" name="subject" required>
+    <option value="féminin">féminin</option>
+    <option value="masculin">masculin</option>
+    <option value="autre">autre</option>
+    <option value="je ne veux pas préciser">
+      je ne veux pas préciser
+    </option></select
+  ><br /><br />
+
+  <label for="CSP"
+    >Dans quelle catégorie socio-professionnelle êtes vous? :</label
+  >
+ -->
+
+<form [formGroup]="myForm" (ngSubmit)="sendToInfoFirstTask()">
+  <label>
+    Quel âge avez-vous ?
+    <input type="number" formControlName="age" />
+  </label>
+  <br />
+  <br />
+
+  Quel est votre genre?
+  <select formControlName="genre">
+    <option value="" disabled>Choisissez</option>
+    <option *ngFor="let genre of genres" [ngValue]="genre">
+      {{ genre }}
+    </option>
+  </select>
+  <br />
+  <br />
+
+  Quelle est votre catégorie socio-professionnelle ?
+  <select formControlName="csp">
+    <option value="" disabled>Choisissez</option>
+    <option *ngFor="let csp of csps" [ngValue]="csp">
+      {{ csp }}
+    </option>
+  </select>
+  <br />
+  <br />
+
+  <button type="submit">Continuer</button>
+</form>

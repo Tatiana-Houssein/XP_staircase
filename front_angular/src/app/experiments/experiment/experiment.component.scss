@@ -1,0 +1,46 @@
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Adjust this if necessary */
+}
+
+.centered-image {
+  display: block;
+  margin: 0 auto;
+  // transition: opacity 1s ease; /* Adjust the transition duration to 1 second */
+}
+
+.echelle {
+  padding: 10px;
+  display: block;
+  margin: 10;
+  width: 70%;
+  // transition: opacity 1s ease; /* Adjust the transition duration to 1 second */
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.change-button {
+  margin: 0 5px; /* Adjust this for spacing between buttons */
+  width: 150px; /* Adjust this for the desired width of the buttons */
+  padding: 10px; /* Adjust this for button padding */
+}
+
+.vu-par-ia {
+  border: 20px solid #009614;
+}
+
+.non-vu-par-ia {
+  border: 20px solid #940000;
+}
+
+.pas-de-flag-ia {
+  border: 20px solid #ffffff;
+}

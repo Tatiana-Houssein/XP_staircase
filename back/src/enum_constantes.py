@@ -1,6 +1,12 @@
 from enum import StrEnum
 
 
+class StrategyIA(StrEnum):
+    sans_ia = "sans ia"
+    sans_ommissions = "sans ommissions"
+    sans_fausses_alarmes = "sans fausses alarmes"
+
+
 class TypeErreur(StrEnum):
     detection_correct = "detection correct"  # sujet vu & stimulus vu
     omission = "omission"  # sujet non vu VS stimulus vu
@@ -14,6 +20,12 @@ class StatusStimulus(StrEnum):
     vu_deux_fois = "vu deux fois"
 
 
+class FlagIA(StrEnum):
+    pas_de_flag = "pas de flag IA"
+    vu = "vu selon IA"
+    non_vu = "non vu selon IA"
+
+
 class ReponseSujet(StrEnum):
     vu = "vu"
     non_vu = "non vu"
@@ -23,3 +35,10 @@ class TypeReponseSujet(StrEnum):
     succes = "succes"
     echec = "echec"
     osef = "osef"
+
+
+class StateMetaExperiment(StrEnum):
+    first = "phase 1"
+    second = "phase 2"
+    third = "phase 3"
+    finish = "termine"

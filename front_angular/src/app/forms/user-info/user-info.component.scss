@@ -1,0 +1,26 @@
+$marge: 200px;
+
+body {
+    font-size: 40px; // Augmente la taille de la police de base pour l'ensemble du document
+}
+
+
+p {
+    margin: $marge; // Ajoute une marge de la taille définie autour du paragraphe
+    text-align: justify;
+    font-size: 1.3rem;
+
+
+}
+
+button {
+    position: fixed; // Utilisez 'fixed' pour que le bouton reste fixe par rapport à la fenêtre du navigateur
+    bottom: 95px; // Ajustez la distance du bas selon vos besoins
+    left: 50%; // Positionnez le bouton horizontalement au centre de la fenêtre
+    transform: translateX(-50%); // Déplacez le bouton horizontalement de moitié de sa propre largeur vers la gauche pour le centrer
+    font-size: 1.2rem; // Utilisation de rem pour définir la taille de la police
+}
+
+body {
+    font-size: 25px; // Augmente la taille de la police de base pour l'ensemble du document
+}

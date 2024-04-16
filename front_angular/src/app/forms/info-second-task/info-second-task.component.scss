@@ -1,0 +1,29 @@
+h1 {
+    font-size: 50px;
+    margin-top: 120px; // Marge en haut du titre
+    margin-bottom: 20px; // Marge en bas du titre
+    margin-left: 100px; // Marge à gauche du titre
+    margin-right: 10px; // Marge à droite du titre
+}
+
+button {
+    position: fixed; // Utilisez 'fixed' pour que le bouton reste fixe par rapport à la fenêtre du navigateur
+    bottom: 95px; // Ajustez la distance du bas selon vos besoins
+    left: 50%; // Positionnez le bouton horizontalement au centre de la fenêtre
+    transform: translateX(-50%); // Déplacez le bouton horizontalement de moitié de sa propre largeur vers la gauche pour le centrer
+    font-size: 1.2rem; // Utilisation de rem pour définir la taille de la police
+}
+
+$marge: 200px;
+
+p {
+    text-align: justify;
+    font-size: 1.3rem;
+    margin-top: 100px;
+    margin-bottom: 50px;
+    margin-left: 100px;
+    margin-right: 100px;
+
+
+
+}

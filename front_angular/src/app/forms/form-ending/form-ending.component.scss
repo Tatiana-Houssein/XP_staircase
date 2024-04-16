@@ -1,0 +1,24 @@
+form {
+    font-size: 25px;
+    max-width: 650px; // Ajustez selon vos besoins
+    margin-top: 50px;
+    margin-left: 300px;
+    margin-bottom: 20px;
+    label {
+        display: inline-block; // Met les labels sur la même ligne
+        margin-right: 10px; // Ajoute un peu d'espace entre les labels (optionnel)
+    }
+    input[type="submit"] {
+        display: block; // Permet d'appliquer les marges horizontales automatiques
+        margin: 0 auto; // Centre le bouton horizontalement
+        margin-top: 10px; // Ajoute un peu d'espace au-dessus du bouton (optionnel)
+    }
+
+    }
+
+    h1 {
+        font-size: 50px;
+        margin-top: 90px; // Marge en haut du titre
+        margin-left: 100px; // Marge à gauche du titre
+        margin-right: 10px; // Marge à droite du titre
+    }

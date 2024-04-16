@@ -1,21 +1,20 @@
-import random
 import time
 
 import streamlit as st
 import streamlit.components.v1 as components
 
-from back.configuration import (
+from back.src.constantes import (
     LAG_INITIAL,
     PREFIX_STIMULUS,
-    TAILLE_POOL_NON_VU,
     TEMPS_EXPOSITION,
 )
-from back.constantes import ReponseSujet
-from back.experiment import (
-    Experience,
+from back.src.enum_constantes import ReponseSujet
+from back.src.experiment import (
+    Experiment,
     Stimulus,
+    initialisation_liste_des_stimuli,
 )
-from back.io import save_result
+from back.src.io import save_result
 from front_streamlit.experiment_js import js_script_optimized
 
 col1, col2, col3 = st.columns(3)
@@ -37,20 +36,18 @@ def display_face(id_face: int) -> None:
 
 if "experiment" not in st.session_state:
     # Crée une variable experiment dans le dict des session_state
-    list_id = list(range(1, TAILLE_POOL_NON_VU))
-    random.shuffle(list_id)
-    l_stim = [Stimulus(i) for i in list_id]
-    st.session_state["experiment"] = Experience(
-        liste_stimuli=l_stim,
+    st.session_state["experiment"] = Experiment(
+        liste_stimuli=initialisation_liste_des_stimuli(),
         lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=lambda x: f"str{x}",  # a defaut fonction con
     )
 
 if "current_stimulus" not in st.session_state:
     # Crée une variable current_stimulus dans le dict des session_state
+    st.session_state["experiment"].update_current_stimulus()
     st.session_state["current_stimulus"] = st.session_state[
         "experiment"
-    ].choix_prochain_stimulus()
+    ].current_stimulus
 
 if "id_face" not in st.session_state:
     # Crée une variable id_face dans le dict des session_state
@@ -65,21 +62,25 @@ def anwser_to_face_recognition(reponse_du_sujet: str, number: int) -> None:
     Args:
         reponse_du_sujet (str):
     """
-    experiment: Experience = st.session_state["experiment"]
+
+    # Traitement réponse sujet
+    experiment: Experiment = st.session_state["experiment"]
     current_stimulus: Stimulus = st.session_state["current_stimulus"]
-    print(f"n° stim: {current_stimulus.numero}, tour: {experiment.tour}")
+    print(f"n° stim: {current_stimulus.id}, tour: {experiment.tour}")
     experiment.traitement_reponse_sujet(
         reponse_du_sujet=reponse_du_sujet,
-        stimulus=current_stimulus,
         nombre_sujet=number,
     )
-    current_stimulus = experiment.choix_prochain_stimulus()
-    experiment.mise_a_jour_lag_pool_vu()
+
+    # Choix prochain stimulus
+
+    experiment.update_current_stimulus()
+    current_stimulus = experiment.current_stimulus
     experiment.tour += 1
     st.session_state["experiment"] = experiment
     st.session_state["current_stimulus"] = current_stimulus
 
-    st.session_state["id_face"] = current_stimulus.numero
+    st.session_state["id_face"] = current_stimulus.id
 
 
 def answer_number(number: int) -> None:

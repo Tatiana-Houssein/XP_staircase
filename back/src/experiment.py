@@ -1,14 +1,27 @@
+import random
 from collections.abc import Callable
 
-from back.configuration import AUGMENTATION_LAG, DIMINUTION_LAG, LAG_INITIAL
-from back.constantes import ReponseSujet, StatusStimulus, TypeErreur, TypeReponseSujet
-from back.io import save_result
-from back.resultat import Resultat
+from back.src.constantes import (
+    AUGMENTATION_LAG,
+    DIMINUTION_LAG,
+    LAG_INITIAL,
+    TAILLE_POOL_NON_VU,
+)
+from back.src.enum_constantes import (
+    FlagIA,
+    ReponseSujet,
+    StateMetaExperiment,
+    StatusStimulus,
+    TypeErreur,
+    TypeReponseSujet,
+)
+from back.src.io import save_result
+from back.src.resultat import ResultExperiment
 
 
 class Stimulus:
-    def __init__(self, numero: int) -> None:
-        self.numero = numero
+    def __init__(self, stimulus_id: int) -> None:
+        self.id = stimulus_id
         self.statut: str = StatusStimulus.non_vu
         self.lag: int = 0
         self.lag_initial: int = 0
@@ -19,6 +32,9 @@ class Stimulus:
         elif self.statut == StatusStimulus.vu:
             self.statut = StatusStimulus.vu_deux_fois
 
+    def __repr__(self) -> str:
+        return f"Stimulus n°{self.id}."
+
 
 def le_sujet_repond() -> str:
     reponse_sujet = input("Avez vous déjà vu ce visage ?")
@@ -27,7 +43,38 @@ def le_sujet_repond() -> str:
     return ReponseSujet.non_vu
 
 
-class Experience:
+def initialisation_liste_des_stimuli() -> list[Stimulus]:
+    """Retourne une liste de stimuli de taille TAILLE_NON_VU.
+
+    L'ordre est aléatoire
+
+    Returns:
+        list[Stimulus]:
+    """
+    liste_id = list(range(1, TAILLE_POOL_NON_VU))
+    random.shuffle(liste_id)
+    return [Stimulus(i) for i in liste_id]
+
+
+def get_dict_of_list_stimuli_for_meta_experiment() -> (
+    dict[StateMetaExperiment, list[Stimulus]]
+):
+    dict_state_meta_to_list_stimuli = {}
+    liste_id = list(range(1, TAILLE_POOL_NON_VU + 1))
+    random.shuffle(liste_id)
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.first] = [
+        Stimulus(i) for i in liste_id if i <= len(liste_id) / 3
+    ]
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.second] = [
+        Stimulus(i) for i in liste_id if len(liste_id) / 3 < i <= 2 * len(liste_id) / 3
+    ]
+    dict_state_meta_to_list_stimuli[StateMetaExperiment.third] = [
+        Stimulus(i) for i in liste_id if i > 2 * len(liste_id) / 3
+    ]
+    return dict_state_meta_to_list_stimuli
+
+
+class Experiment:
     def __init__(
         self,
         liste_stimuli: list[Stimulus],
@@ -35,18 +82,21 @@ class Experience:
         fonction_question_au_sujet: Callable[..., str],
     ) -> None:
         self.pool_non_vus = liste_stimuli
-        self.pool_vus: list[Stimulus] = []
+        self.pool_vus_une_fois: list[Stimulus] = []
+        self.pool_vus_deux_fois: list[Stimulus] = []
         self.lag_global = lag_initial
         self.tour: int = 0
-        self.liste_resultat: list[Resultat] = []
+        self.liste_resultat: list[ResultExperiment] = []
         self.fonction_question_au_sujet = fonction_question_au_sujet
+        self.update_current_stimulus()
 
     def mise_a_jour_lag_pool_vu(self) -> None:
         """
-        On abaisse de 1 le lag de tous les stimuli présents dans pool_vus
+        On abaisse de 1 le lag de tous les stimuli présents dans pool_vus.
         """
-        for stimulus in self.pool_vus:
+        for stimulus in self.pool_vus_une_fois:
             stimulus.lag -= 1
+
             if stimulus.lag < 0:
                 stimulus.lag = 0
 
@@ -90,7 +140,6 @@ class Experience:
             TypeReponseSujet:
         """
         type_erreur = self.get_type_erreur_du_sujet(reponse_sujet, status_stimulus)
-        print(type_erreur)
         if type_erreur in [
             TypeErreur.detection_correct,
         ]:
@@ -102,67 +151,99 @@ class Experience:
     def traitement_reponse_sujet(
         self,
         reponse_du_sujet: str,
-        stimulus: Stimulus,
         nombre_sujet: int = -1,
+        flag_ia: str = FlagIA.pas_de_flag,
     ) -> None:
         """
         Le lag global est adapté à la bonne ou mauvaise réponse du sujet au stimulus
         donné.
         Puis on met à jour le status de ce stimulus (non_vu -> vu -> vu_deux_fois)
         """
+        print(
+            f"TYPE ERREUR: {self.get_type_erreur_du_sujet(reponse_du_sujet, self.current_stimulus.statut)}"  # noqa: E501
+        )
         if (
-            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut)
             == TypeReponseSujet.succes
         ):
             self.lag_global += AUGMENTATION_LAG
         elif (
-            self.is_sujet_right(reponse_du_sujet, stimulus.statut)
+            self.is_sujet_right(reponse_du_sujet, self.current_stimulus.statut)
             == TypeReponseSujet.echec
         ):
             self.lag_global -= DIMINUTION_LAG
             if self.lag_global < 0:
                 self.lag_global = 0
-        # 'print(f"Rép sujet: {reponse_du_sujet} || Status stimulus: {stimulus.statut}")
-        print(f"Lag actuel: {self.lag_global}, lag ini stim: {stimulus.lag_initial}")
-        resultat = Resultat(
+        resultat = ResultExperiment(
             tour=self.tour,
             lag_global=self.lag_global,
-            lag_initial_stimulus=stimulus.lag_initial,
-            numero_stimulus=stimulus.numero,
-            reponse_correct=str(stimulus.statut),
+            lag_initial_stimulus=self.current_stimulus.lag_initial,
+            numero_stimulus=self.current_stimulus.id,
+            reponse_correct=str(self.current_stimulus.statut),
             reponse_sujet=str(reponse_du_sujet),
             type_erreur_tds=str(
-                self.get_type_erreur_du_sujet(reponse_du_sujet, stimulus.statut)
+                self.get_type_erreur_du_sujet(
+                    reponse_du_sujet, self.current_stimulus.statut
+                )
             ),
             nombre_sujet=nombre_sujet,
+            flag_ia=flag_ia,
         )
         self.liste_resultat.append(resultat)
 
-        stimulus.mise_a_jour_status()
-        if stimulus.statut == StatusStimulus.vu_deux_fois:
-            self.pool_vus.remove(stimulus)
+        self.current_stimulus.mise_a_jour_status()
+        if self.current_stimulus.statut == StatusStimulus.vu_deux_fois:
+            self.pool_vus_une_fois.remove(self.current_stimulus)
+            self.pool_vus_deux_fois.append(self.current_stimulus)
 
     def choix_prochain_stimulus(self) -> Stimulus:
-        """Choisis le prochain stimulus a devoir être présenté.
+        """Renvoie le futur stimulus.
 
-        Si un stimulus du pool vu a lag de 0, c'est lui.
-        Sinon on ajoute un stuimulus du pool non vu.
+        Si un stimulus du pool vu a lag de 0, c'est lui même.
+        Sinon on ajoute le premier stimulus du pool non vu.
+
+        Ne mets pas à jour le stimulus actuel (current stimulus) !
+
+        Mets à jour les liste vu et non_vus !
+
+        TODO: fonction impure, la modification des liste est dangereuse.
 
         Returns:
             Stimulus:
         """
-        print(
-            f"#pool vus: {len(self.pool_vus)}, #pool non vus: {len(self.pool_non_vus)}"
-        )
-        for stimulus in self.pool_vus:
+        for stimulus in self.pool_vus_une_fois:
             if stimulus.lag == 0:
                 return stimulus
         stimulus = self.pool_non_vus[0]
         stimulus.lag = self.lag_global
         stimulus.lag_initial = self.lag_global
-        self.pool_vus.append(stimulus)
+        self.pool_vus_une_fois.append(stimulus)
         self.pool_non_vus.pop(0)
         return stimulus
+
+    def guess_next_stimulus_id(self) -> int:
+        """Renvoie l'id du futur stimulus.
+
+        Ne mets pas à jour le stimulus actuel (current_stimulus) !
+
+        Returns:
+            int
+        """
+        for stimulus in self.pool_vus_une_fois:
+            if stimulus.lag == 0 and stimulus.id != self.current_stimulus.id:
+                return stimulus.id
+        if len(self.pool_non_vus) > 0:
+            return self.pool_non_vus[0].id
+        return -1
+
+    def update_current_stimulus(self) -> None:
+        """Met à jour le stimulus actuel.
+
+        current_stimulus mis à jour.
+        lag des stimuli vus mis à jour.
+        """
+        self.current_stimulus = self.choix_prochain_stimulus()
+        self.mise_a_jour_lag_pool_vu()
 
     def deroulement_un_tour(self) -> None:
         """
@@ -171,13 +252,9 @@ class Experience:
         Puis on pose la question sur ce stimulus.
         Suivant la réponse (bonne ou mauvaise) on ajuste le lag global.
         """
-        stimulus_choisi = self.choix_prochain_stimulus()
-        print(f"Lag: {self.lag_global}, status : {stimulus_choisi.statut}")
-        self.mise_a_jour_lag_pool_vu()
+        self.update_current_stimulus()
         reponse_du_sujet = self.fonction_question_au_sujet()
-        self.traitement_reponse_sujet(
-            reponse_du_sujet=reponse_du_sujet, stimulus=stimulus_choisi
-        )
+        self.traitement_reponse_sujet(reponse_du_sujet=reponse_du_sujet)
 
     def is_condition_arret_remplie(self) -> bool:
         """Renvoie True si l'experience doit s'arrêter.
@@ -197,9 +274,9 @@ class Experience:
         Avant, on supprime de la liste tous les stimuli vu deux fois du pool_vus
         """
         while not self.is_condition_arret_remplie():
-            for stimulus in self.pool_vus:
+            for stimulus in self.pool_vus_une_fois:
                 if stimulus.statut == StatusStimulus.vu_deux_fois:
-                    self.pool_vus.remove(stimulus)
+                    self.pool_vus_une_fois.remove(stimulus)
             self.deroulement_un_tour()
             self.tour += 1
         save_result(self.liste_resultat)
@@ -207,7 +284,7 @@ class Experience:
 
 if __name__ == "__main__":
     l_stimuli = [Stimulus(i) for i in range(10)]
-    Experience(
+    Experiment(
         liste_stimuli=l_stimuli,
         lag_initial=LAG_INITIAL,
         fonction_question_au_sujet=le_sujet_repond,

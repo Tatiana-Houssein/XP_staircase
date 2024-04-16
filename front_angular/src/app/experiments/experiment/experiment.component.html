@@ -1,0 +1,71 @@
+<!-- <app-despair></app-despair>
+
+<p>Curr Img Test Comp: {{ currentImageId }}, {{currentImageUrl}}, {{nextImageId}}, {{nextImageUrl}} ||| {{ isExperimentLaunched }}</p> -->
+
+<!-- <div>STATE : {{ stateMetaExperiment }}</div> -->
+
+<div class="image-container">
+  <img
+    [src]="currentImageUrl"
+    [ngClass]="{
+      'non-vu-par-ia': flagIA === 'non vu selon IA',
+      'vu-par-ia': flagIA === 'vu selon IA',
+      'pas-de-flag-ia': flagIA === 'pas de flag IA',
+    }"
+    alt="Image"
+    class="centered-image"
+    [style.opacity]="imageOpacity"
+  />
+
+  <div class="button-container">
+    <button
+      (click)="userClickButton(1)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      1
+    </button>
+
+    <button
+      (click)="userClickButton(2)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      2
+    </button>
+
+    <button
+      (click)="userClickButton(3)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      3
+    </button>
+    <button
+      (click)="userClickButton(4)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      4
+    </button>
+    <button
+      (click)="userClickButton(5)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      5
+    </button>
+    <button
+      (click)="userClickButton(6)"
+      [disabled]="buttonsDisabled"
+      class="change-button"
+    >
+      6
+    </button>
+    <!-- <button (click)="goToSecondPage()" class="change-button">Go to Second Page</button>
+    <button (click)="incrementTest()" class="change-button">Incr</button> -->
+    <!-- <p>{{ flagIA }}</p> -->
+  </div>
+
+  <img [src]="'assets/echelle.png'" alt="Image" class="echelle" />
+</div>
