@@ -18,8 +18,8 @@ def question_tache_interferente() -> str:
 
 
 def create_tache_interferente_data() -> TacheInterferenteData:
-    number_1 = rd.randint(10, 99)  # noqa: S311
-    number_2 = rd.randint(10, 99)  # noqa: S311
+    number_1 = rd.randint(11, 60)  # noqa: S311
+    number_2 = rd.randint(11, 60)  # noqa: S311
     return TacheInterferenteData(
         number_1, number_2, number_1 + number_2, f"{number_1} + {number_2} = "
     )

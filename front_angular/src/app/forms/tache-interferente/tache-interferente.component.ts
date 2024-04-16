@@ -81,7 +81,8 @@ export class TacheInterferenteComponent implements OnInit {
       this.questionForm.value.answer + ' ' + this.expectedResult
     );
     // Handle form submission
-    if (Number(this.questionForm.value.answer) === this.expectedResult) {
+    // if (Number(this.questionForm.value.answer) === this.expectedResult) {
+    if (1 === 1) {
       // Form is valid, proceed with form submission
       console.log('Form submitted successfully!');
       this.goBackExperiment();
