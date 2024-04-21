@@ -13,8 +13,8 @@ from back.src.experiment import (
     le_sujet_repond,
 )
 from back.src.ia import (
-    TableCardinalResultExperiment,
-    TableProportionResultExperiment,
+    TableCardinal,
+    TableStochastic,
 )
 from back.src.resultat import ResultExperiment
 
@@ -31,7 +31,7 @@ def go_to_next_state_meta_experiment(
 
 def extract_table_cardinaux_from_list_result(
     list_result: list[ResultExperiment]
-) -> TableCardinalResultExperiment:
+) -> TableCardinal:
     ommission = 0
     detection_correct = 0
     rejet_correct = 0
@@ -45,9 +45,36 @@ def extract_table_cardinaux_from_list_result(
             rejet_correct += 1
         else:
             fausse_alarme += 1
-    return TableCardinalResultExperiment(
+    return TableCardinal(
         max(1, ommission), detection_correct, rejet_correct, max(1, fausse_alarme)
     )
+
+
+def get_table_proportion_fitting_d_prime_from_list_result(
+    d_prime_to_fit: float,
+    list_result: list,
+    strategy_ia: StrategyIA,
+) -> TableStochastic:
+    print(f"d' phase 1 : {d_prime_to_fit}")
+    print(
+        f"new table card pre transf: {extract_table_cardinaux_from_list_result(list_result)}"  # noqa: E501
+    )
+    if strategy_ia == StrategyIA.sans_fausses_alarmes:
+        table_cardinaux = extract_table_cardinaux_from_list_result(
+            list_result
+        ).transfert_fausses_alarmes_to_ommissions()
+    else:
+        table_cardinaux = extract_table_cardinaux_from_list_result(
+            list_result
+        ).transfert_ommissions_to_fausses_alarmes()
+    print(f"table card post transfert : {table_cardinaux}")
+    table_prop_pre_fit = table_cardinaux.get_corresponding_table_stochastic()
+    print(f"new d' pre-fit : {table_prop_pre_fit.d_prime}")
+    table_prop_post_fit = table_prop_pre_fit.get_tableau_fitting_given_d_prime(
+        d_prime_to_fit
+    )
+    print(f"d' fité {table_prop_post_fit.d_prime}")
+    return table_prop_post_fit
 
 
 class MetaExperiment:
@@ -56,9 +83,7 @@ class MetaExperiment:
         self.state: StateMetaExperiment = StateMetaExperiment.first
         self.dict_state_list_stimuli = get_dict_of_list_stimuli_for_meta_experiment()
         self.experiment: Experiment = self.initialisation_new_experiment()
-        self.tableau_proportion: TableProportionResultExperiment = (
-            TABLEAU_PROPORTION_SUR
-        )
+        self.tableau_proportion: TableStochastic = TABLEAU_PROPORTION_SUR
         self.strategy_ia: StrategyIA = StrategyIA.sans_ia
         self.current_flag_ia = FlagIA.pas_de_flag
         self.setup_directories()
@@ -77,33 +102,23 @@ class MetaExperiment:
     def update_meta_experiment_state(self) -> None:
         if self.experiment.guess_next_stimulus_id() == -1:
             # TOFIX: save_result(self.experiment.liste_resultat)  # noqa: ERA001
+            if self.state == StateMetaExperiment.first:
+                self.table_cardinaux_phase_1 = extract_table_cardinaux_from_list_result(
+                    self.experiment.liste_resultat
+                )
+                print(f"table_card_ini {self.table_cardinaux_phase_1}")
+                self.d_prime_phase_1 = self.table_cardinaux_phase_1.get_corresponding_table_stochastic().d_prime  # noqa: E501
+                print(f"d' ini: {self.d_prime_phase_1}")
             self.state = go_to_next_state_meta_experiment(self.state)
             self.strategy_ia = DICT_STATE_META_TO_STRATEGY_IA[self.state]
-            tableau_cardinaux = extract_table_cardinaux_from_list_result(
-                self.experiment.liste_resultat
-            )
-            print(f"card reel {tableau_cardinaux}")
-            tableau_prop_ini = tableau_cardinaux.get_corresponding_tableau_proportion()
-            print(f"prop ini {tableau_prop_ini}")
-            d_prime = tableau_prop_ini.d_prime
-            print(f"d' ini {d_prime}")
-            if self.strategy_ia == StrategyIA.sans_fausses_alarmes:
-                tableau_cardinaux = extract_table_cardinaux_from_list_result(
-                    self.experiment.liste_resultat
-                ).transfert_fausses_alarmes_to_ommissions()
-            else:
-                tableau_cardinaux = extract_table_cardinaux_from_list_result(
-                    self.experiment.liste_resultat
-                ).transfert_ommissions_to_fausses_alarmes()
-            print(f"card transfert {tableau_cardinaux}")
-            tableau_prop_tran = tableau_cardinaux.get_corresponding_tableau_proportion()
-            print(f"prop apres tran avant fit {tableau_prop_tran}")
-            print(f"d' tran {tableau_prop_tran.d_prime}")
+
             self.tableau_proportion = (
-                tableau_prop_tran.get_tableau_fitting_given_d_prime(d_prime)
+                get_table_proportion_fitting_d_prime_from_list_result(
+                    d_prime_to_fit=self.d_prime_phase_1,
+                    list_result=self.experiment.liste_resultat,
+                    strategy_ia=self.strategy_ia,
+                )
             )
-            print(f"prop fitté {self.tableau_proportion}")
-            print(f"d' fité {self.tableau_proportion.d_prime}")
             if self.state != StateMetaExperiment.finish:
                 self.experiment = self.initialisation_new_experiment()
                 print(self.experiment.guess_next_stimulus_id())

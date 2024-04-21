@@ -9,7 +9,7 @@ from back.src.enum_constantes import FlagIA, StatusStimulus, StrategyIA
 
 
 def get_ia_flag(
-    tableau_proportion_resultat_experience: TableProportionResultExperiment,
+    tableau_proportion_resultat_experience: TableStochastic,
     status_stimulus: str,
     strategy_ia: StrategyIA,
 ) -> FlagIA:
@@ -27,7 +27,7 @@ def get_ia_flag(
 
 
 @dataclass
-class TableCardinalResultExperiment:
+class TableCardinal:
     """Tableau des cardinaux des résultats.
 
     Attention : ommissions et fausses alarmes sont au minimum à 1 !!
@@ -38,43 +38,42 @@ class TableCardinalResultExperiment:
     rejets_corrects: int
     fausses_alarmes: int
 
-    def transfert_ommissions_to_fausses_alarmes(self) -> TableCardinalResultExperiment:
+    def transfert_ommissions_to_fausses_alarmes(self) -> TableCardinal:
         transferred_ommissions = max(0, self.ommissions - 1)
         new_fausses_alarmes = max(1, self.fausses_alarmes + transferred_ommissions)
-        return TableCardinalResultExperiment(
+        return TableCardinal(
             1,
             self.detections_correctes,
             self.rejets_corrects,
             new_fausses_alarmes,
         )
 
-    def transfert_fausses_alarmes_to_ommissions(self) -> TableCardinalResultExperiment:
+    def transfert_fausses_alarmes_to_ommissions(self) -> TableCardinal:
         transferred_fausses_alarmes = max(0, self.fausses_alarmes - 1)
         new_ommissions = max(1, self.ommissions + transferred_fausses_alarmes)
-        return TableCardinalResultExperiment(
+        return TableCardinal(
             new_ommissions,
             self.detections_correctes,
             self.rejets_corrects,
             1,
         )
 
-    def get_corresponding_tableau_proportion(self) -> TableProportionResultExperiment:
+    def get_corresponding_table_stochastic(self) -> TableStochastic:
         omi = max(self.ommissions, 1)
         fa = max(self.fausses_alarmes, 1)
         dc = max(self.detections_correctes, 1)
         rc = max(self.rejets_corrects, 1)
 
-        total = omi + dc + rc + fa
-        return TableProportionResultExperiment(
-            omi / total,
-            dc / total,
-            rc / total,
-            fa / total,
+        return TableStochastic(
+            omi / (omi + dc),
+            dc / (omi + dc),
+            rc / (fa + rc),
+            fa / (fa + rc),
         )
 
 
 @dataclass
-class TableProportionResultExperiment:
+class TableStochastic:
     ommissions: float
     detections_correctes: float
     rejets_corrects: float
@@ -85,6 +84,7 @@ class TableProportionResultExperiment:
         return compute_d_prime(self.detections_correctes, self.fausses_alarmes)
 
     def probabilite_flag_ia_vu(self, status_reel: str) -> float:
+        """Proba que l'IA lève un flag 'VU' vert."""
         if status_reel == StatusStimulus.vu:
             return self.detections_correctes / (
                 self.detections_correctes + self.ommissions
@@ -93,20 +93,17 @@ class TableProportionResultExperiment:
 
     def get_tableau_fitting_given_d_prime(
         self, original_d_prime: float
-    ) -> TableProportionResultExperiment:
+    ) -> TableStochastic:
         new_detection_correct = (
             find_new_detection_correct_corresponding_original_d_prime(
                 original_d_prime, self.fausses_alarmes
             )
         )
-        new_rejet_correct = (
-            1 - self.ommissions - self.fausses_alarmes - new_detection_correct
-        )
 
-        return TableProportionResultExperiment(
-            self.ommissions,
+        return TableStochastic(
+            1 - new_detection_correct,
             new_detection_correct,
-            new_rejet_correct,
+            self.rejets_corrects,
             self.fausses_alarmes,
         )
 
