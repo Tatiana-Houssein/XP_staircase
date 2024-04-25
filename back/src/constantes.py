@@ -11,7 +11,7 @@ PREFIX_STIMULUS = "visages/visage-"  # tokens/token_
 TABLEAU_PROPORTION_SUR = TableStochastic(1, 1000, 1000, 1)
 DICT_STATE_META_TO_STRATEGY_IA = {
     StateMetaExperiment.first: StrategyIA.sans_ia,
-    StateMetaExperiment.second: StrategyIA.sans_fausses_alarmes,
-    StateMetaExperiment.third: StrategyIA.sans_ommissions,
+    StateMetaExperiment.second: StrategyIA.sans_ommissions,
+    StateMetaExperiment.third: StrategyIA.sans_fausses_alarmes,
     StateMetaExperiment.finish: StrategyIA.sans_ia,
 }
