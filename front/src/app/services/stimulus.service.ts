@@ -3,11 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Stimulus } from '../stimulus.model';
 
-class TacheInterferenteDate {
-  number1!: number;
-  number2!: number;
-  result!: number;
-}
 
 @Injectable({
   providedIn: 'root',
